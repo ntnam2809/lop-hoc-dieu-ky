@@ -1,0 +1,11 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 160'>
+<defs><linearGradient id='bw' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#9ED6F5'/><stop offset='1' stop-color='#5AA8E0'/></linearGradient></defs>
+<ellipse cx='110' cy='152' rx='84' ry='7' fill='#5A3B2E' opacity='.14'/>
+<g stroke='#5A3B2E' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'>
+<path d='M40 68 C 50 20 170 20 180 68 Z' fill='#FFFDF3'/>
+<path d='M16 78 C 16 70 24 66 32 66 L 188 66 C 196 66 204 70 204 78 C 204 126 162 146 110 146 C 58 146 16 126 16 78 Z' fill='url(#bw)'/>
+</g>
+<ellipse cx='82' cy='58' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(-20 82 58)'/><ellipse cx='106' cy='46' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(10 106 46)'/><ellipse cx='132' cy='44' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(30 132 44)'/><ellipse cx='94' cy='60' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(-40 94 60)'/><ellipse cx='120' cy='54' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(18 120 54)'/><ellipse cx='148' cy='56' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(-12 148 56)'/><ellipse cx='70' cy='62' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(24 70 62)'/><ellipse cx='140' cy='63' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(-8 140 63)'/><ellipse cx='108' cy='63' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(36 108 63)'/><ellipse cx='158' cy='63' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(-30 158 63)'/><ellipse cx='118' cy='36' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(60 118 36)'/><ellipse cx='88' cy='50' rx='9' ry='4.6' fill='#FFFDF3' stroke='#5A3B2E' stroke-width='2' transform='rotate(-50 88 50)'/>
+<path d='M34 92 C 40 112 56 124 76 130' fill='none' stroke='#fff' stroke-width='6' stroke-linecap='round' opacity='.55'/>
+<circle cx='110' cy='112' r='7' fill='#fff' opacity='.6'/><circle cx='150' cy='108' r='5' fill='#fff' opacity='.6'/>
+</svg>
