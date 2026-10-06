@@ -1,0 +1,6 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'>
+<path d='M30 20 L170 20 L156 276 Q154 290 140 290 L60 290 Q46 290 44 276 Z' fill='#EAF7FF' fill-opacity='.2' stroke='#5A3B2E' stroke-width='6' stroke-linejoin='round'/>
+<path d='M46 36 L 60 270' stroke='#fff' stroke-width='9' stroke-linecap='round' opacity='.7' fill='none'/>
+<path d='M154 44 L 148 120' stroke='#fff' stroke-width='5' stroke-linecap='round' opacity='.5' fill='none'/>
+<ellipse cx='100' cy='20' rx='70' ry='6' fill='#fff' fill-opacity='.35' stroke='#5A3B2E' stroke-width='4'/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 120'>
+<ellipse cx='100' cy='112' rx='70' ry='6' fill='#5A3B2E' opacity='.14'/>
+<g class='sway' stroke='#5A3B2E' stroke-width='5' stroke-linejoin='round' stroke-linecap='round'>
+<path d='M100 108 C 96 80 70 54 52 20 C 84 40 106 70 108 108 Z' fill='#7CC76B'/>
+<path d='M100 108 C 106 70 130 40 160 22 C 150 56 124 82 112 108 Z' fill='#9BDB6B'/>
+<path d='M96 108 C 90 84 74 76 42 70 C 70 66 96 76 106 108 Z' fill='#6BB85A'/>
+<path d='M104 108 C 112 88 130 78 164 76 C 138 70 112 80 98 108 Z' fill='#7CC76B'/>
+<path d='M100 108 C 98 70 100 40 104 8 C 116 40 116 76 108 108 Z' fill='#8ED367'/>
+</g>
+</svg>

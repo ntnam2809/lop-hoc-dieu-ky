@@ -1,0 +1,23 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 380'>
+<defs>
+<linearGradient id='cape' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FF6B5E'/><stop offset='1' stop-color='#D12F2F'/></linearGradient>
+<radialGradient id='skin' cx='42%' cy='35%' r='75%'><stop offset='0' stop-color='#FFEBD6'/><stop offset='1' stop-color='#F6C9A0'/></radialGradient>
+</defs>
+<ellipse cx='150' cy='366' rx='92' ry='11' fill='#5A3B2E' opacity='.14'/>
+<g stroke='#5A3B2E' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'>
+<path d='M112 326 v22 M188 326 v22' stroke='#F6C9A0' stroke-width='20' fill='none'/>
+<ellipse cx='110' cy='354' rx='28' ry='14' fill='#8D5A3B'/><ellipse cx='190' cy='354' rx='28' ry='14' fill='#8D5A3B'/>
+<path d='M150 188 C 98 188 68 232 60 292 C 56 322 60 338 70 342 C 112 354 188 354 230 342 C 240 338 244 322 240 292 C 232 232 202 188 150 188 Z' fill='url(#cape)'/>
+<path d='M150 214 C 128 214 112 232 108 262 L 108 340 C 130 346 170 346 192 340 L 192 262 C 188 232 172 214 150 214 Z' fill='#FFF6E8' stroke-width='5'/>
+<circle cx='84' cy='296' r='15' fill='url(#skin)'/><circle cx='216' cy='296' r='15' fill='url(#skin)'/>
+<path d='M150 36 C 78 36 52 98 60 160 C 66 204 100 220 150 220 C 200 220 234 204 240 160 C 248 98 222 36 150 36 Z' fill='url(#cape)'/>
+<ellipse cx='150' cy='138' rx='68' ry='64' fill='url(#skin)'/>
+<path d='M84 128 C 92 74 208 74 216 128 C 196 106 172 98 150 98 C 128 98 104 106 84 128 Z' fill='#6B442F'/>
+<path d='M64 150 C 54 92 92 54 150 52 C 208 54 246 92 236 150 C 230 108 206 78 150 76 C 94 78 70 108 64 150 Z' fill='#E04545'/>
+</g>
+<ellipse cx='98' cy='168' rx='15' ry='9' fill='#FF8FA6' opacity='.55'/><ellipse cx='202' cy='168' rx='15' ry='9' fill='#FF8FA6' opacity='.55'/>
+<g class='blink'><ellipse cx='122' cy='144' rx='9' ry='13' fill='#3B2A22'/><circle cx='126' cy='138' r='3.78' fill='#fff'/><circle cx='118' cy='150' r='1.8' fill='#fff'/><ellipse cx='178' cy='144' rx='9' ry='13' fill='#3B2A22'/><circle cx='182' cy='138' r='3.78' fill='#fff'/><circle cx='174' cy='150' r='1.8' fill='#fff'/></g>
+<path d='M134 172 q16 14 32 0' fill='none' stroke='#5A3B2E' stroke-width='4.5' stroke-linecap='round'/>
+<path d='M138 214 l12 12 l12 -12' fill='none' stroke='#FFFFFF' stroke-width='6' stroke-linecap='round' stroke-linejoin='round' opacity='.9'/>
+<path d='M100 70 C 114 50 140 44 160 46' fill='none' stroke='#fff' stroke-width='6' stroke-linecap='round' opacity='.4'/>
+</svg>
