@@ -1,0 +1,21 @@
+{
+  "name": "lop-hoc-dieu-ky",
+  "private": true,
+  "version": "0.2.0",
+  "description": "Lớp Học Diệu Kỳ — trường học online 2D (modular monolith, npm workspaces).",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "npm run check -w @lhdk/domain && npm run check:classroom",
+    "check:classroom": "npm run validate -w @lhdk/classroom && npm run typecheck -w @lhdk/classroom && npm test -w @lhdk/classroom && npm run build -w @lhdk/classroom",
+    "test": "npm test --workspaces --if-present",
+    "test:e2e": "npm run test:e2e -w @lhdk/classroom --",
+    "dev:classroom": "npm run dev -w @lhdk/classroom"
+  }
+}

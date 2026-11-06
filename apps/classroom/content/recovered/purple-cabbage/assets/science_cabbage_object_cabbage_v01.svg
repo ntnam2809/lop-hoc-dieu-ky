@@ -1,0 +1,18 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 220'>
+<defs>
+<radialGradient id='cab' cx='40%' cy='30%' r='80%'><stop offset='0' stop-color='#C07AE0'/><stop offset='0.6' stop-color='#8E44B8'/><stop offset='1' stop-color='#5E2A8C'/></radialGradient>
+<radialGradient id='cab2' cx='40%' cy='30%' r='80%'><stop offset='0' stop-color='#D79BEF'/><stop offset='1' stop-color='#9B52C6'/></radialGradient>
+</defs>
+<ellipse cx='120' cy='208' rx='88' ry='8' fill='#5A3B2E' opacity='.14'/>
+<g stroke='#5A3B2E' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'>
+<path d='M18 138 C 8 168 40 196 84 194 C 70 170 62 150 62 128 Z' fill='url(#cab2)'/>
+<path d='M222 138 C 232 168 200 196 156 194 C 170 170 178 150 178 128 Z' fill='url(#cab2)'/>
+<ellipse cx='120' cy='122' rx='92' ry='82' fill='url(#cab)'/>
+<path d='M120 40 C 76 60 66 130 104 196 C 112 198 128 198 136 196 C 174 130 164 60 120 40 Z' fill='url(#cab2)'/>
+</g>
+<g fill='none' stroke='#F0D4FA' stroke-width='4' stroke-linecap='round' opacity='.85'>
+<path d='M120 50 C 108 90 108 150 120 192'/><path d='M120 70 C 100 84 84 96 66 98 M120 100 C 100 110 88 124 76 140 M120 70 C 140 84 156 96 174 98 M120 100 C 140 110 152 124 164 140'/>
+<path d='M64 74 C 56 92 56 116 64 136 M176 74 C 184 92 184 116 176 136' stroke-width='3.5'/>
+</g>
+<ellipse cx='72' cy='84' rx='12' ry='22' fill='#fff' opacity='.35' transform='rotate(24 72 84)'/>
+</svg>

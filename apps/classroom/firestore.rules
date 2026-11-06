@@ -1,0 +1,18 @@
+rules_version = '2';
+
+// Nội dung chỉ được ghi qua tools/publish.ts (Admin SDK, bỏ qua rules).
+// Người dùng thường chỉ đọc được bản đã xuất bản; người duyệt (custom claim
+// `reviewer`) đọc được cả bản nháp ở chế độ ?preview.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isReviewer() {
+      return request.auth != null && request.auth.token.reviewer == true;
+    }
+
+    match /{collection}/{docId} {
+      allow read: if collection in ['domains', 'topics', 'lessons', 'scenarios', 'activities', 'assets']
+        && (resource.data.status == 'published' || isReviewer());
+      allow write: if false;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'>
+<defs><linearGradient id='rw' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#C9EEFF'/><stop offset='1' stop-color='#79C6F0'/></linearGradient></defs>
+<path d='M38 84 L162 84 L152 270 Q150 282 138 282 L62 282 Q50 282 48 270 Z' fill='url(#rw)' opacity='.92'/>
+<ellipse cx='100' cy='84' rx='62' ry='7' fill='#fff' opacity='.45'/>
+
+</svg>

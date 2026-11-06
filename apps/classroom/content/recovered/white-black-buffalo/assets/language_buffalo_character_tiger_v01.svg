@@ -1,0 +1,27 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 340 300'>
+<defs>
+<radialGradient id='tg' cx='40%' cy='30%' r='80%'><stop offset='0' stop-color='#FFB45C'/><stop offset='1' stop-color='#F07D1E'/></radialGradient>
+</defs>
+<ellipse cx='172' cy='286' rx='130' ry='11' fill='#5A3B2E' opacity='.14'/>
+<g stroke='#5A3B2E' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'>
+<path d='M286 170 C 330 150 336 96 300 70' fill='none' stroke='#F07D1E' stroke-width='22'/><path d='M286 170 C 330 150 336 96 300 70' fill='none' stroke-width='6' opacity='0'/>
+<path d='M300 70 C 312 80 318 92 314 106' fill='none' stroke='#5A3B2E' stroke-width='8'/>
+<rect x='96' y='206' width='36' height='70' rx='16' fill='url(#tg)'/><rect x='214' y='206' width='36' height='70' rx='16' fill='url(#tg)'/>
+<ellipse cx='188' cy='168' rx='112' ry='74' fill='url(#tg)'/>
+<ellipse cx='188' cy='200' rx='80' ry='36' fill='#FFF3DA' stroke='none'/>
+<rect x='136' y='214' width='36' height='64' rx='16' fill='url(#tg)'/><rect x='252' y='212' width='36' height='64' rx='16' fill='url(#tg)'/>
+<circle cx='74' cy='70' r='24' fill='url(#tg)'/><circle cx='186' cy='70' r='24' fill='url(#tg)'/>
+<circle cx='74' cy='72' r='11' fill='#FFC9D2' stroke='none'/><circle cx='186' cy='72' r='11' fill='#FFC9D2' stroke='none'/>
+<ellipse cx='130' cy='134' rx='88' ry='72' fill='url(#tg)'/>
+<ellipse cx='130' cy='170' rx='54' ry='36' fill='#FFF3DA' stroke='none'/>
+<path d='M118 148 C 122 138 140 138 144 148 C 140 158 122 158 118 148 Z' fill='#E85A7A' stroke-width='4'/>
+</g>
+<g stroke='#3B2A22' stroke-width='9' stroke-linecap='round' fill='none'>
+<path d='M130 70 v26 M104 74 l6 22 M156 74 l-6 22'/><path d='M46 130 l22 4 M46 156 l24 -2'/><path d='M214 130 l-22 4 M214 156 l-24 -2'/>
+<path d='M150 110 l-12 8 M230 150 v38 M260 144 v40 M290 148 v34 M212 120 l-4 22' stroke-width='10'/>
+</g>
+<g class='blink'><ellipse cx='98' cy='126' rx='11' ry='13' fill='#3B2A22'/><circle cx='102' cy='120' r='4.62' fill='#fff'/><circle cx='94' cy='132' r='2.2' fill='#fff'/><ellipse cx='162' cy='126' rx='11' ry='13' fill='#3B2A22'/><circle cx='166' cy='120' r='4.62' fill='#fff'/><circle cx='158' cy='132' r='2.2' fill='#fff'/></g>
+<path d='M96 114 q10 -10 24 -4 M164 114 q-10 -10 -24 -4' fill='none' stroke='#5A3B2E' stroke-width='5' stroke-linecap='round'/>
+<path d='M130 158 v8 M108 178 q22 20 44 0' fill='none' stroke='#5A3B2E' stroke-width='4.5' stroke-linecap='round'/>
+<path d='M118 182 l5 10 l5 -10 M132 182 l5 10 l5 -10' fill='#fff' stroke='#5A3B2E' stroke-width='3' stroke-linejoin='round'/>
+</svg>

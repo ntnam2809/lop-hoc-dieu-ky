@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "domains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "ageRange": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "min",
+              "max"
+            ],
+            "additionalProperties": false
+          },
+          "order": {
+            "type": "number"
+          },
+          "theme": {
+            "type": "object",
+            "properties": {
+              "primary": {
+                "type": "string"
+              },
+              "accent": {
+                "type": "string"
+              },
+              "soft": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "primary",
+              "accent",
+              "soft"
+            ],
+            "additionalProperties": false
+          },
+          "cover": {
+            "type": "object",
+            "properties": {
+              "bg": {
+                "type": "string"
+              },
+              "layers": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema1"
+                }
+              }
+            },
+            "required": [
+              "layers"
+            ],
+            "additionalProperties": false
+          },
+          "learningLoop": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contentVersion": {
+            "$ref": "#/$defs/__schema2"
+          },
+          "status": {
+            "$ref": "#/$defs/__schema3"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "title",
+          "description",
+          "ageRange",
+          "order",
+          "theme",
+          "contentVersion",
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/__schema0"
+          },
+          "domainId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "learningObjectives": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "order": {
+            "type": "number"
+          },
+          "contentVersion": {
+            "$ref": "#/$defs/__schema2"
+          },
+          "status": {
+            "$ref": "#/$defs/__schema3"
+          }
+        },
+        "required": [
+          "id",
+          "domainId",
+          "name",
+          "description",
+          "learningObjectives",
+          "order",
+          "contentVersion",
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "domains",
+    "topics"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-_]*$"
+    },
+    "__schema1": {
+      "type": "object",
+      "properties": {
+        "asset": {
+          "type": "string"
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "w": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "h": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "flip": {
+          "type": "boolean"
+        },
+        "rotate": {
+          "type": "number"
+        },
+        "anim": {
+          "type": "string",
+          "enum": [
+            "none",
+            "idle",
+            "hop",
+            "walk",
+            "run",
+            "sleep",
+            "cry",
+            "cheer",
+            "wiggle",
+            "bob",
+            "sway",
+            "spin",
+            "pulse",
+            "shake",
+            "think",
+            "peek"
+          ]
+        },
+        "emote": {
+          "type": "string",
+          "enum": [
+            "heart",
+            "question",
+            "exclaim",
+            "tear",
+            "zzz",
+            "sparkle",
+            "music",
+            "idea"
+          ]
+        }
+      },
+      "required": [
+        "asset",
+        "x",
+        "y",
+        "w",
+        "h"
+      ],
+      "additionalProperties": false
+    },
+    "__schema2": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "__schema3": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "review",
+        "approved",
+        "published",
+        "archived"
+      ]
+    }
+  }
+}

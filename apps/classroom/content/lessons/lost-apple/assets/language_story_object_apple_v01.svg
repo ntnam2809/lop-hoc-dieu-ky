@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 210">
+  <defs>
+    <radialGradient id="red" cx="36%" cy="34%" r="76%">
+      <stop offset="0" stop-color="#FF8A80"/>
+      <stop offset="0.55" stop-color="#F0453A"/>
+      <stop offset="1" stop-color="#C62828"/>
+    </radialGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9BDB6B"/>
+      <stop offset="1" stop-color="#4CAF50"/>
+    </linearGradient>
+  </defs>
+  <g stroke="#5A3B2E" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M100 52 C 98 34 104 20 116 10" fill="none" stroke-width="8"/>
+    <path d="M104 46 C 112 22 140 14 160 22 C 152 46 126 56 104 46 Z" fill="url(#leaf)"/>
+    <path d="M100 58 C 82 44 40 40 24 78 C 10 112 22 160 52 186 C 70 202 88 198 100 190 C 112 198 130 202 148 186 C 178 160 190 112 176 78 C 160 40 118 44 100 58 Z" fill="url(#red)"/>
+  </g>
+  <path d="M110 40 C 124 30 140 26 152 26" fill="none" stroke="#3E8E41" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="58" cy="96" rx="14" ry="24" fill="#fff" opacity=".55" transform="rotate(24 58 96)"/>
+  <circle class="glint" cx="72" cy="72" r="7" fill="#fff"/>
+</svg>

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.env
+.env.local
+service-account*.json
+.firebase/
+.firebaserc
+*.log
+.DS_Store
