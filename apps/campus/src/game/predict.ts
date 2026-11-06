@@ -29,6 +29,20 @@ export function stepToward(from: Vec, target: Vec, speed: number, dt: number): {
   return { pos, arrived: pos.x === target.x && pos.y === target.y };
 }
 
+/** Trần dt mỗi khung (ms): tab ẩn rồi hiện lại không làm nhân vật dịch chuyển tức thời. */
+export const MAX_FRAME_DT_MS = 100;
+
+/** dt thật giữa hai khung (ms) → giây, chặn ở [0, MAX_FRAME_DT_MS]. */
+export function frameDtSeconds(rawMs: number): number {
+  if (!Number.isFinite(rawMs) || rawMs <= 0) return 0;
+  return Math.min(rawMs, MAX_FRAME_DT_MS) / 1000;
+}
+
+/** Như stepToward nhưng nhận dt thật bằng ms (đã chặn ≤ MAX_FRAME_DT_MS). */
+export function stepTowardMs(from: Vec, target: Vec, speed: number, dtMs: number): { pos: Vec; arrived: boolean } {
+  return stepToward(from, target, speed, frameDtSeconds(dtMs));
+}
+
 /** Đi theo hướng phím (dx,dy ∈ {-1,0,1}); chéo được chuẩn hoá để không nhanh hơn. */
 export function stepByDirection(from: Vec, dx: number, dy: number, speed: number, dt: number): Vec {
   const len = Math.hypot(dx, dy);

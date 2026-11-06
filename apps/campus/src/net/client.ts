@@ -61,6 +61,11 @@ export function createNet(opts: NetOptions): Net {
   function adopt(r: Room<any, any>) {
     if (destroyed) { void r.leave(); return; }
     room = r;
+    // Mặc định SDK chỉ tự nối lại khi phòng đã sống ≥ minUptime (5 s); rớt sớm hơn thì onLeave ngay
+    // và ta vào phiên mới (mất id/vị trí). Server giữ chỗ 30 s nên cho nối lại ngay từ đầu.
+    r.reconnection.minUptime = 0;
+    // Lần thử đầu sau ~300 ms (backoff 2^n * delay) để server kịp chạy onDrop/allowReconnection.
+    r.reconnection.delay = 150;
     // Mất bất thường: dùng reconnect có sẵn của SDK (server giữ chỗ 30 s qua onDrop).
     saveToken(r);
     const push = () => {
@@ -72,15 +77,17 @@ export function createNet(opts: NetOptions): Net {
     };
     r.onStateChange(push);
     r.onMessage('correct', (m: CorrectMsg) => opts.onCorrect(m));
-    r.onDrop(() => { if (room === r && !destroyed) setStatus('reconnecting'); });
+    r.onDrop((code) => { console.debug(`[reconnect] drop code=${code}`); if (room === r && !destroyed) setStatus('reconnecting'); });
     r.onReconnect(() => {
+      console.debug('[reconnect] ok');
       if (room !== r || destroyed) return;
       saveToken(r); // token đổi sau mỗi lần nối lại
       setStatus('connected');
       opts.onJoined(r.sessionId);
       push();
     });
-    r.onLeave(() => {
+    r.onLeave((code) => {
+      console.debug(`[reconnect] leave code=${code}`);
       // SDK báo hết hạn / token bị từ chối / bị đóng hẳn: join mới, không treo.
       if (destroyed || room !== r) return;
       room = null;
@@ -114,7 +121,8 @@ export function createNet(opts: NetOptions): Net {
       if (destroyed) { void r.leave(); return false; }
       adopt(r);
       return true;
-    } catch {
+    } catch (e: any) {
+      console.debug(`[reconnect] join failed code=${e?.code ?? e?.name}`);
       return false;
     }
   }

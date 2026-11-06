@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { Avatar } from './avatar';
 import {
-  clampToWorld, interpolate, pickTarget, pruneSamples, pushSample,
+  clampToWorld, frameDtSeconds, interpolate, pickTarget, pruneSamples, pushSample,
   stepByDirection, stepToward, type Sample, type Vec,
 } from './predict';
 import {
@@ -25,7 +25,8 @@ export class YardScene extends Phaser.Scene {
   private target: Vec | null = null;
   private seq = 0;
   private lastSent: Vec | null = null;
-  private sendAcc = 0;
+  private lastFrameAt: number | null = null;
+  private lastSendAt = -Infinity;
   private remotes = new Map<string, Remote>();
   private ready = false;
   private keys: { left: Phaser.Input.Keyboard.Key; right: Phaser.Input.Keyboard.Key; up: Phaser.Input.Keyboard.Key; down: Phaser.Input.Keyboard.Key; a: Phaser.Input.Keyboard.Key; d: Phaser.Input.Keyboard.Key; w: Phaser.Input.Keyboard.Key; s: Phaser.Input.Keyboard.Key } | null = null;
@@ -95,11 +96,15 @@ export class YardScene extends Phaser.Scene {
     this.ready = true;
   }
 
-  update(_time: number, delta: number) {
+  update() {
     if (!this.ready) return;
-    const dt = Math.min(delta, 100) / 1000;
+    // Không dùng `delta` của Phaser: nó làm mượt/reset về ~16 ms khi khung hình chậm (đo được
+    // delta ≤ 17 ms trong khi khoảng cách thật giữa hai khung > 100 ms), làm nhân vật đi rất chậm.
+    const now = performance.now();
+    const dt = frameDtSeconds(this.lastFrameAt === null ? 0 : now - this.lastFrameAt);
+    this.lastFrameAt = now;
     this.stepSelf(dt);
-    this.sendMaybe(dt);
+    this.sendMaybe(now);
     this.renderAll();
   }
 
@@ -123,10 +128,11 @@ export class YardScene extends Phaser.Scene {
     }
   }
 
-  private sendMaybe(dt: number) {
-    this.sendAcc += dt;
-    if (this.sendAcc < 1 / MOVE_HZ) return;
-    this.sendAcc = 0;
+  // Theo đồng hồ thật (performance.now), ≤ MOVE_HZ. Khung bị giật thì gửi một lần với vị trí
+  // hiện tại, không bù dồn.
+  private sendMaybe(now: number) {
+    if (now - this.lastSendAt < 1000 / MOVE_HZ) return;
+    this.lastSendAt = now;
     if (!this.opts.isConnected()) return;
     const ls = this.lastSent;
     if (ls && ls.x === this.self.x && ls.y === this.self.y) return;

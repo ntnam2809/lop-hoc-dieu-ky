@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   clampToWorld, hashHue, interpolate, limitStep, pickTarget, pruneSamples, pushSample,
-  stepByDirection, stepToward, type Sample,
+  stepByDirection, stepToward, stepTowardMs, frameDtSeconds, type Sample,
 } from '../src/game/predict';
 import { CLIENT_SPEED, SERVER_MAX_SPEED } from '../src/net/protocol';
 
@@ -76,5 +76,36 @@ describe('chọn đích bằng chạm', () => {
     expect(hashHue('abc')).toBe(hashHue('abc'));
     expect(hashHue('abc')).toBeGreaterThanOrEqual(0);
     expect(hashHue('abc')).toBeLessThan(360);
+  });
+});
+
+describe('tốc độ theo đồng hồ thật', () => {
+  // Mô phỏng 1 s thực chia thành các khung dt ms (khung cuối lẻ cũng tính).
+  function distPerSecond(dtMs: number): number {
+    let pos = { x: 0, y: 0 };
+    let t = 0;
+    while (t < 1000) {
+      const d = Math.min(dtMs, 1000 - t);
+      pos = stepTowardMs(pos, { x: 1e6, y: 0 }, CLIENT_SPEED, d).pos;
+      t += d;
+    }
+    return pos.x;
+  }
+  for (const dt of [16, 33, 100]) {
+    it(`dt ${dt} ms → ≈ ${CLIENT_SPEED} px/s (sai ≤ 5%)`, () => {
+      expect(Math.abs(distPerSecond(dt) - CLIENT_SPEED)).toBeLessThanOrEqual(CLIENT_SPEED * 0.05);
+    });
+  }
+  it('dt 250 ms bị chặn 100 ms (tab ẩn không dịch tức thời)', () => {
+    expect(frameDtSeconds(250)).toBeCloseTo(0.1);
+    expect(stepTowardMs({ x: 0, y: 0 }, { x: 1e6, y: 0 }, CLIENT_SPEED, 250).pos.x).toBeCloseTo(20);
+    expect(frameDtSeconds(-5)).toBe(0);
+    expect(frameDtSeconds(NaN)).toBe(0);
+  });
+  it('không vượt đích', () => {
+    let pos = { x: 0, y: 0 };
+    const target = { x: 37, y: 0 };
+    for (let i = 0; i < 20; i++) pos = stepTowardMs(pos, target, CLIENT_SPEED, 33).pos;
+    expect(pos).toEqual(target);
   });
 });
