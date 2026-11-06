@@ -2,7 +2,7 @@
 // Chạy: npm run build -w @lhdk/campus && npm run measure -w @lhdk/campus
 // Cờ/ENV: --server-port / MEASURE_SERVER_PORT (2577) · --stress-port / MEASURE_STRESS_PORT (2578)
 //         --preview-port / MEASURE_PREVIEW_PORT (5197) · --out-dir / MEASURE_OUT_DIR
-//         --only fps,bundle,leak,latency,server (mặc định: tất cả) · PW_CHROMIUM
+//         --only fps,bundle,leak,latency,server,throttle (mặc định: tất cả) · --rounds N (vòng rò bộ nhớ, mặc định 10) · PW_CHROMIUM
 // Kết quả JSON in ra stdout và ghi vào <out-dir>/measure-out-<n>.json (không ghi vào repo).
 import { spawn, execFileSync, type ChildProcess } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -26,11 +26,12 @@ const SERVER_PORT = Number(arg('server-port', 'MEASURE_SERVER_PORT', '2577'));
 const STRESS_PORT = Number(arg('stress-port', 'MEASURE_STRESS_PORT', '2578'));
 const PREVIEW_PORT = Number(arg('preview-port', 'MEASURE_PREVIEW_PORT', '5197'));
 const OUT_DIR = arg('out-dir', 'MEASURE_OUT_DIR', join(tmpdir(), 'lhdk-measure'));
-const ONLY = new Set(arg('only', 'MEASURE_ONLY', 'fps,bundle,leak,latency,server').split(','));
+const ONLY = new Set(arg('only', 'MEASURE_ONLY', 'fps,bundle,leak,latency,server,throttle').split(','));
 const CHROMIUM = process.env.PW_CHROMIUM || '/opt/pw-browsers/chromium';
 const WARMUP_MS = 5000;
 const SAMPLE_MS = 20_000;
-const LEAK_ROUNDS = 10;
+const LEAK_ROUNDS = Number(arg('rounds', 'MEASURE_ROUNDS', '10'));
+const LEAK_WARMUP_ROUNDS = 5; // bỏ khỏi hồi quy
 const LATENCY_SAMPLES = 50;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -39,6 +40,8 @@ const log = (...a: unknown[]) => console.error('[measure]', ...a);
 
 // ---------- tiến trình con ----------
 const children: ChildProcess[] = [];
+let correctCount = 0; // số dòng '[campus] correct <lý do>' của server đo (CAMPUS_LOG_CORRECT=1)
+const correctReasons: Record<string, number> = {};
 function run(cmd: string, args: string[], opts: { cwd?: string; env?: NodeJS.ProcessEnv } = {}): ChildProcess {
   const p = spawn(cmd, args, {
     cwd: opts.cwd ?? ROOT,
@@ -46,6 +49,14 @@ function run(cmd: string, args: string[], opts: { cwd?: string; env?: NodeJS.Pro
     detached: true,
     stdio: ['ignore', 'pipe', 'pipe'],
   });
+  if (opts.env?.CAMPUS_LOG_CORRECT) {
+    p.stdout?.on('data', (d: Buffer) => {
+      for (const line of d.toString().split('\n')) {
+        const m = /\[campus\] correct (\S+)/.exec(line);
+        if (m) { correctCount++; correctReasons[m[1]!] = (correctReasons[m[1]!] ?? 0) + 1; }
+      }
+    });
+  }
   p.stdout?.resume();
   p.stderr?.resume();
   children.push(p);
@@ -138,7 +149,7 @@ function slope(ys: number[]): number {
 
 // ---------- server / preview / bots ----------
 function startServer(port: number, maxClients?: number): ChildProcess {
-  const env: NodeJS.ProcessEnv = { PORT: String(port) };
+  const env: NodeJS.ProcessEnv = { PORT: String(port), CAMPUS_LOG_CORRECT: '1' };
   if (maxClients) env.CAMPUS_MAX_CLIENTS = String(maxClients);
   return run('npm', ['run', 'start', '-w', '@lhdk/server'], { env });
 }
@@ -285,7 +296,15 @@ async function leak(b: Browser) {
       nodes: document.getElementsByTagName('*').length,
       canvases: document.getElementsByTagName('canvas').length,
     }));
+    const listeners = async () => {
+      try {
+        const w = await cdp.send('Runtime.evaluate', { expression: 'window' });
+        const l = await cdp.send('DOMDebugger.getEventListeners', { objectId: w.result.objectId! });
+        return l.listeners.length;
+      } catch { return -1; }
+    };
     const baseHeap = await heap();
+    const baseListeners = await listeners();
     const baseDom = await dom();
     const observerBase = count();
     const rounds: Array<Record<string, number>> = [];
@@ -300,16 +319,22 @@ async function leak(b: Browser) {
       const serverPlayers = count() - 1;
       const used = await heap();
       const d = await dom();
-      rounds.push({ round: i, usedSize: used, domNodes: d.nodes, canvases: d.canvases, serverPlayersWhileMounted: whileMounted, serverPlayersAfterUnmount: serverPlayers, closeMs });
+      const wl = await listeners();
+      rounds.push({ round: i, usedSize: used, domNodes: d.nodes, canvases: d.canvases, windowListeners: wl, serverPlayersWhileMounted: whileMounted, serverPlayersAfterUnmount: serverPlayers, closeMs });
     }
     const ys = [baseHeap, ...rounds.map((r) => r.usedSize!)];
     const last = ys[ys.length - 1]!;
+    const tail = rounds.slice(LEAK_WARMUP_ROUNDS).map((r) => r.usedSize!);
     return {
       base: { usedSize: baseHeap, domNodes: baseDom.nodes, canvases: baseDom.canvases, observerCountBaseline: observerBase },
       rounds,
       delta_bytes: last - baseHeap,
       delta_pct: round(((last - baseHeap) / baseHeap) * 100, 2),
       slope_bytes_per_round: Math.round(slope(ys)),
+      rounds_total: LEAK_ROUNDS,
+      warmup_rounds_dropped: LEAK_WARMUP_ROUNDS,
+      slope_after_warmup_bytes_per_round: tail.length >= 2 ? Math.round(slope(tail)) : null,
+      base_window_listeners: baseListeners,
       server_players_after_all_unmounts: rounds.map((r) => r.serverPlayersAfterUnmount),
       final_dom_nodes_delta: rounds[rounds.length - 1]!.domNodes! - baseDom.nodes,
       final_canvases: rounds[rounds.length - 1]!.canvases,
@@ -373,6 +398,9 @@ async function latency(b: Browser) {
       n: samples.length,
       median_ms: pct(s, 50),
       p95_ms: pct(s, 95),
+      median_minus_interp_ms: pct(s, 50) - 100,
+      p95_minus_interp_ms: pct(s, 95) - 100,
+      interp_delay_ms_assumed: 100,
       min_ms: s[0],
       max_ms: s[s.length - 1],
       mean_ms: round(samples.reduce((a, c) => a + c, 0) / samples.length, 1),
@@ -384,6 +412,59 @@ async function latency(b: Browser) {
     await sleep(500);
     await pa.context().close();
     await pb.context().close();
+  }
+}
+
+// ---------- e. tốc độ client dưới tải CPU ----------
+async function throttle(b: Browser) {
+  log('throttle');
+  const page = await newPage(b);
+  const levels: Array<Record<string, unknown>> = [];
+  try {
+    const cdp = await page.context().newCDPSession(page);
+    await page.goto(url(`name=Thr&server=ws://localhost:${SERVER_PORT}`));
+    if ((await waitPlayers(page, 1)) !== 1) throw new Error('throttle: chưa vào phòng');
+    const goAndMeasure = async (x: number, y: number) => page.evaluate(([tx, ty]) => new Promise<{ px_per_s: number; dist: number; ms: number; arrived: boolean }>((res) => {
+      const s0 = window.__campus.state().self!;
+      const p0 = { x: s0.x, y: s0.y };
+      const t0 = performance.now();
+      window.__campus.moveTo(tx!, ty!);
+      const tick = () => {
+        const s = window.__campus.state().self!;
+        const ms = performance.now() - t0;
+        const arrived = Math.hypot(s.x - tx!, s.y - ty!) < 3;
+        if (arrived || ms > 90_000) {
+          const dist = Math.hypot(s.x - p0.x, s.y - p0.y);
+          res({ px_per_s: dist / (ms / 1000), dist, ms, arrived });
+        } else setTimeout(tick, 20);
+      };
+      tick();
+    }), [x, y]);
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    await goAndMeasure(150, 360);
+    let x = 750; // luân phiên 150 ↔ 750 (600 px), liên tục xuyên các mức để mẫu nào cũng đi đủ 600 px
+    for (const rate of [1, 4, 12]) {
+      await cdp.send('Emulation.setCPUThrottlingRate', { rate });
+      await sleep(500);
+      const c0 = correctCount;
+      const r0 = { ...correctReasons };
+      const samples: Array<{ px_per_s: number; dist: number; ms: number; arrived: boolean }> = [];
+      for (let i = 0; i < 3; i++) {
+        samples.push(await goAndMeasure(x, 360));
+        x = x === 750 ? 150 : 750;
+      }
+      await sleep(500);
+      const reasons: Record<string, number> = {};
+      for (const [k, v] of Object.entries(correctReasons)) if (v - (r0[k] ?? 0) > 0) reasons[k] = v - (r0[k] ?? 0);
+      const speeds = samples.map((s) => round(s.px_per_s, 1));
+      levels.push({ cpu_throttle: rate, px_per_s: speeds, mean_px_per_s: round(speeds.reduce((a, c) => a + c, 0) / speeds.length, 1), dist_px: samples.map((s) => round(s.dist, 0)), arrived: samples.map((s) => s.arrived), correct_lines: correctCount - c0, correct_reasons: reasons });
+    }
+    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
+    return { client_speed_px_s: 200, server_cap_px_s: 220, levels };
+  } finally {
+    await page.evaluate(() => window.__campus.unmount()).catch(() => {});
+    await sleep(500);
+    await page.context().close();
   }
 }
 
@@ -421,7 +502,7 @@ async function main() {
   const pid = findServerPid(SERVER_PORT);
   if (ONLY.has('server')) result.cold_start = cold;
 
-  const needBrowser = ['fps', 'leak', 'latency'].some((k) => ONLY.has(k));
+  const needBrowser = ['fps', 'leak', 'latency', 'throttle'].some((k) => ONLY.has(k));
   const preview = needBrowser ? run('npx', ['vite', 'preview', '--port', String(PREVIEW_PORT), '--strictPort'], { cwd: CAMPUS }) : null;
   const res: Record<string, unknown> = {};
   const serverRes: Record<string, unknown> = {};
@@ -463,6 +544,9 @@ async function main() {
             fps.avatars30_over_cap = await fpsScenario(b, '30 avatar', STRESS_PORT, 30);
           } finally { await stop(bots); }
         } finally { await stop(stress); }
+        const m = (k: string) => (fps[k] as { fps_mean: number }).fps_mean;
+        fps.ratio_fps20_over_fps1 = round(m('avatars20') / m('bots0_1avatar'), 3);
+        fps.ratio_fps30_over_fps1 = round(m('avatars30_over_cap') / m('bots0_1avatar'), 3);
         res.fps = fps;
       } else if (ONLY.has('server')) {
         const bots = await startBots(19, SERVER_PORT, 60);
@@ -472,6 +556,7 @@ async function main() {
       }
       if (b && ONLY.has('leak')) res.leak = await leak(b);
       if (b && ONLY.has('latency')) res.latency = await latency(b);
+      if (b && ONLY.has('throttle')) res.throttle = await throttle(b);
     } finally {
       await b?.close();
     }
