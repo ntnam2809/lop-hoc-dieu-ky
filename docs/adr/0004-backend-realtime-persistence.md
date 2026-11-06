@@ -1,6 +1,6 @@
 # ADR-0004 — Backend Node 22 + TypeScript, realtime theo room, Postgres
 
-**Trạng thái:** Accepted hướng đi; chọn thư viện realtime sau spike S1 · 2026-11-06 · module `platform` + `world` + `classroom`
+**Trạng thái:** Accepted hướng đi; chọn thư viện realtime sau spike S1 · phần Postgres: Superseded by ADR-0017 cho MVP (Firestore) · 2026-11-06 · module `platform` + `world` + `classroom`
 
 ## Bối cảnh
 Cần: kiểm quyền phía server, state phiên học tin cậy, vị trí avatar nhiều người, lưu trường/lớp/kết quả có quan hệ.

@@ -37,7 +37,7 @@ Trường học 2D trực tuyến: người lớn lập trường, mở lớp, d
 
 ## Đang chờ anh Nam (blocker)
 - **Q-13** xác nhận hiệu trưởng thật · **Q-16** mẫu tóm tắt SKKN → MVP-B. **Q-02** chỉ chặn phase có hồ sơ trẻ.
-- **Q-04** hosting/ngân sách → chặn staging MVP-A (M3). Q-12 ✓ khung RPG đã duyệt.
+- Q-04 ✓ hạ tầng miễn phí, phiên live ≤ 20 người (ADR-0017) · Q-12 ✓ khung RPG đã duyệt.
 - Danh sách đủ: `docs/DECISIONS.md` › Câu hỏi chủ dự án.
 
 ## Lệnh

@@ -1,6 +1,6 @@
 # Module `platform` — monorepo · build · CI · server bootstrap · lưu trữ · deploy · quan sát (L1)
 
-**Lead:** `lead-platform` · **ADR:** 0001, 0002, 0004, 0011, 0013 · **Luật:** CONSTITUTION §3.3, §5, §6
+**Lead:** `lead-platform` · **ADR:** 0001, 0002, 0004, 0013, 0017 · **Luật:** CONSTITUTION §3.3, §5, §6
 
 ## Sứ mệnh
 Để mọi module build/test/deploy được bằng một lệnh, không ai phải nhớ mẹo môi trường.
@@ -30,8 +30,8 @@ M0 ✓: workspaces (`@lhdk/domain`, `@lhdk/classroom`), CI chạy `npm run check
 
 ## Việc kế tiếp
 - M1: workspace `apps/campus`; CI thêm build campus.
-- M2: `apps/server` + Postgres (docker compose cho local) + adapter `Store` + migration.
-- M3 (Q-04): staging; workflow Pages build `apps/classroom` (cutover).
+- M2 (ADR-0017): adapter `Store` Firestore (firebase-admin) + Firebase Auth người lớn; chọn host Node free có WebSocket (Render/Koyeb/Cloud Run — kiểm điều khoản thật); xử lý server ngủ/khởi động lạnh.
+- M3: staging trên host free; workflow Pages build `apps/classroom` (cutover).
 
 ## Kiểm
 `npm ci && npm run check` · `npm run test:e2e`

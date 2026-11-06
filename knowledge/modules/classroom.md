@@ -22,7 +22,7 @@ Engine/primitive bài học (→ learning) · campus/di chuyển (→ world) · 
 - Sự kiện room (M2, dự kiến): `session.state {currentActivityId, participants, chatMode}` · `chat.message` · `result.ack`.
 
 ## Bất biến
-- Một phiên live mỗi lớp. Chỉ nộp cho hoạt động đang mở. Server chấm.
+- Một phiên live mỗi lớp, **tối đa 20 người kể cả giáo viên** (ADR-0017). Chỉ nộp cho hoạt động đang mở. Server chấm.
 - Dự đoán/kể lại/nhớ lại = `recorded`, không đúng/sai.
 - Trẻ chỉ câu/sticker ở mọi chế độ chat. Chế độ mặc định: `open` ở trường chơi (chỉ người lớn), `phrases` ở tổ chức.
 - Không livestream phiên của tổ chức (CONSTITUTION §2.7).

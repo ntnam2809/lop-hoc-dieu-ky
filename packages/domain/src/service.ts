@@ -1,6 +1,6 @@
 import { defaultChatLimiter, checkChat, type ChatCatalog, DEFAULT_CHAT_CATALOG, type RateLimiter } from './chat';
 import { conflict, forbidden, invalid, notFound, quota } from './errors';
-import { PLANS, type PlanLimits } from './plans';
+import { LIVE_SESSION_MAX_PARTICIPANTS, PLANS, type PlanLimits } from './plans';
 import { createMemoryStore, type Store } from './store';
 import type {
   ActivityResult,
@@ -336,7 +336,10 @@ export class SchoolService {
     const s = this.live(sessionId);
     const c = this.klass(s.classId);
     if (!this.isEnrolled(c.id, actorId) && !this.canManageClass(actorId, c)) throw forbidden('Chỉ học sinh của lớp mới vào phiên');
-    if (!s.participants.includes(actorId)) s.participants.push(actorId);
+    if (!s.participants.includes(actorId)) {
+      if (s.participants.length >= LIVE_SESSION_MAX_PARTICIPANTS) throw quota(`Phiên đã đủ ${LIVE_SESSION_MAX_PARTICIPANTS} người`);
+      s.participants.push(actorId);
+    }
     return s;
   }
 

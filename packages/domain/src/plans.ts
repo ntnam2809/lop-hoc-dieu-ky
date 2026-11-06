@@ -18,7 +18,13 @@ export interface PlanLimits {
   canAuthorLessons: boolean;
 }
 
+/**
+ * Trần người trong một phiên live (kể cả giáo viên dẫn phiên). Quyết định của anh Nam 2026-11-06:
+ * MVP chạy trên hạ tầng miễn phí, tối đa 20 người một phiên (ADR-0017).
+ */
+export const LIVE_SESSION_MAX_PARTICIPANTS = 20;
+
 export const PLANS: Record<PlanId, PlanLimits> = {
   free: { maxOwnedSchools: 0, maxClassSize: 10, maxTaughtClasses: 1, maxStudentsPerSchool: 0, canAuthorLessons: false },
-  pilot: { maxOwnedSchools: 1, maxClassSize: 30, maxTaughtClasses: 3, maxStudentsPerSchool: 100, canAuthorLessons: false },
+  pilot: { maxOwnedSchools: 1, maxClassSize: 20, maxTaughtClasses: 3, maxStudentsPerSchool: 100, canAuthorLessons: false },
 };

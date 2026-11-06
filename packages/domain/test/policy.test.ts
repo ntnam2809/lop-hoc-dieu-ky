@@ -118,6 +118,23 @@ describe('sức chứa & phiên', () => {
   });
 });
 
+describe('trần phiên live', () => {
+  it('tối đa 20 người một phiên, kể cả giáo viên; vào lại không tính thêm', () => {
+    const svc = new SchoolService();
+    const host = svc.registerUser({ displayName: 'Chủ', planId: 'pilot' });
+    const play = svc.createSchool(host.id, { name: 'Trường chơi', level: 'primary' });
+    svc.grantTeacher(host.id, play.id, host.id);
+    const k = svc.createClass(host.id, play.id, { name: 'Lớp 1', capacity: 20 });
+    const people = Array.from({ length: 20 }, (_, i) => svc.registerUser({ displayName: `Người ${i + 1}` }));
+    people.forEach((p) => svc.enrollWithCode(p.id, k.joinCode));
+    const s = svc.startSession(host.id, k.id, 'lost-apple');
+    people.slice(0, 19).forEach((p) => svc.joinSession(p.id, s.id));
+    expect(svc.session(s.id).participants).toHaveLength(20);
+    expect(code(() => svc.joinSession(people[19]!.id, s.id))).toBe('QUOTA');
+    expect(code(() => svc.joinSession(people[0]!.id, s.id))).toBe('OK');
+  });
+});
+
 describe('hai không gian: trường chơi người lớn ↔ tổ chức có trẻ (ADR-0014)', () => {
   it('chỉ quản trị nền tảng xác minh tổ chức; tổ chức chưa xác minh không có trẻ', () => {
     const { svc, admin, ownerB, teacherB } = world();

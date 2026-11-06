@@ -55,7 +55,7 @@ describe('Hành trình B — trẻ qua tổ chức có thật: tạo trường �
     const school = svc.createSchool(a.id, { name: 'Trường Mầm Non Hoa Sen', level: 'kindergarten', kind: 'organization' });
     expect(svc.rolesIn(school.id, a.id)).toEqual(['principal']);
     svc.grantTeacher(a.id, school.id, b.id);
-    const klass = svc.createClass(b.id, school.id, { name: 'Lớp Lá 1', capacity: 25 });
+    const klass = svc.createClass(b.id, school.id, { name: 'Lớp Lá 1', capacity: 20 });
     expect(() => svc.createManagedStudent(b.id, klass.id, 'Bé Na')).toThrow(/đã xác minh/);
     svc.verifyOrganization(admin.id, school.id);
 

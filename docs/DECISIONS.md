@@ -17,11 +17,12 @@
 | [0008](adr/0008-world-topology.md) | Mỗi trường một campus instance; phòng học là room riêng | Accepted | world · classroom |
 | [0009](adr/0009-entitlements-no-payment.md) | Quyền lợi theo gói, không thanh toán | Accepted | school |
 | [0010](adr/0010-content-schema.md) | Gói bài hiện có là hợp đồng nội dung | Accepted | learning |
-| [0011](adr/0011-hosting-deploy.md) | Hosting & deploy | Proposed (Q-04) | platform |
+| [0011](adr/0011-hosting-deploy.md) | Hosting & deploy | Superseded (server) by 0017 | platform |
 | [0012](adr/0012-agent-hierarchy.md) | Đội agent manager → lead → thợ | Accepted | (toàn repo) |
 | [0013](adr/0013-observability.md) | Quan sát không thu dữ liệu cá nhân trẻ | Proposed (M2) | platform · safety |
 | [0014](adr/0014-two-spaces-adult-first.md) | Hai không gian: trường chơi người lớn ↔ tổ chức có thật cho trẻ | Accepted (phương châm 2026-11-06) | school · safety · world |
 | [0015](adr/0015-livestream-streamer-mode.md) | Livestream TikTok bởi người lớn, streamer mode | Accepted hướng; API TikTok LATER | world · classroom · safety |
+| [0017](adr/0017-free-tier-hosting.md) | Hạ tầng có sẵn, miễn phí (Pages · Firebase · host Node free); phiên live ≤ 20 người | Accepted (anh Nam 2026-11-06) | platform · world · classroom |
 | [0016](adr/0016-mvp-b-teacher-private-mode.md) | MVP-B: giáo viên thiết kế phiên học cho trẻ ở chế độ private, hiệu trưởng thật phê duyệt; trẻ không có tài khoản | Accepted (phương châm 2026-11-06) | school · classroom · learning · safety |
 
 ## Giả định đang dùng (đổi được khi anh Nam trả lời)
@@ -44,7 +45,7 @@
 | Q-01 | ✓ **Đã trả lời 2026-11-06:** phụ huynh chơi trước bằng RPG; trẻ tham gia qua tổ chức có thật do giáo viên thật quản lý; trẻ mẫu giáo không là chủ tài khoản → ADR-0014 | — | — |
 | Q-02 | Còn lại sau phương châm: tổ chức lấy đồng ý của phụ huynh thế nào (giấy tờ của trường hay trong app), ai chịu trách nhiệm dữ liệu trẻ (tổ chức hay nền tảng), lưu/xoá ra sao, thị trường phát hành, có ai tư vấn pháp lý | Chặn phase **có hồ sơ trẻ**; không chặn MVP-A, không chặn MVP-B (ADR-0016: MVP-B không có dữ liệu trẻ) | Hợp đồng với tổ chức: tổ chức giữ đồng ý của phụ huynh, nền tảng xử lý dữ liệu theo hợp đồng — cần luật sư xác nhận |
 | Q-03 | Bậc gói, quota, giá; School Pro có gồm Teacher Pro không | Không (placeholder) | Chờ có số liệu chi phí từ staging |
-| Q-04 | Nhà cung cấp hosting server + Postgres, ngân sách tháng, ai giữ tài khoản | Chặn staging online (M3) | Một container nhỏ + Postgres managed, vùng gần Việt Nam |
+| Q-04 | ✓ **Đã trả lời 2026-11-06:** dùng hạ tầng có sẵn, miễn phí; phiên live tối đa 20 người → ADR-0017. Còn lại: anh Nam tạo/giữ tài khoản host free khi tới M2 | — | — |
 | Q-05 | Chuyển nhượng chủ trường, phó hiệu trưởng, trợ giảng, đóng trường thì dữ liệu đi đâu | Không | LATER |
 | Q-06 | "tạo 1 lớp mới như học sinh" nghĩa là gì — học sinh tự lập lớp/nhóm học? | Không (A-06) | Nếu có: "nhóm học" do học sinh lập trong trường, giáo viên duyệt — LATER |
 | Q-07 | Giáo viên free có được mở lớp nhỏ **không cần trường** (lớp cá nhân)? | Không | Chưa — mọi lớp dưới một trường để giữ chuỗi cấp quyền |
