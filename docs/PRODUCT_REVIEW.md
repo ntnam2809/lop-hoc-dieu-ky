@@ -86,6 +86,17 @@ Một trường mầm non, campus nhỏ (cổng · sân · 2 phòng học), ba v
 - CONSTITUTION · tài liệu thiết kế · ADR · knowledge base phân tầng · đội agent manager/lead/thợ · skill · CI.
 - **Chưa làm (cố ý):** server mạng, campus 2D, auth thật, Postgres — chờ spike S1 và Q-04.
 
-## 8. Câu hỏi cho anh Nam
+## 8. Điều chỉnh theo phương châm của anh Nam (2026-11-06, sau review)
+
+| Phương châm | Hệ quả thiết kế | Thay đổi so với review ban đầu |
+|---|---|---|
+| MVP kéo phụ huynh trước bằng RPG: giải trí, hiểu cơ chế trước khi cho con tham gia | **MVP-A** chỉ có người lớn, ở trường chơi (`play`): nhập vai đủ vòng đời trường, chuỗi nhiệm vụ, EXP, trang phục, chế độ "nhìn như con" | P1 đổi: pilot đầu tiên là **người lớn**, không phải lớp Lá. P11 đổi: RPG progression vào MVP, nhưng **chỉ ở không gian người lớn** |
+| Trẻ tham gia qua tổ chức có thật, giáo viên thật quản lý | **MVP-B**: trường `organization` phải được xác minh mới có hồ sơ trẻ; người lớn không làm học sinh ở lớp có trẻ | Bổ sung lớp bảo vệ T14/T15; Q-02 thu hẹp, thêm Q-13 |
+| Livestream TikTok quảng bá (người lớn) | Chỉ ở trường chơi, có streamer mode; cấm ở tổ chức | P3/P7 nới cho người lớn: campus trải nghiệm chính thức nhiều instance, chat chữ người lớn có moderation. Thêm ADR-0015, T16/T17 |
+| Trẻ mẫu giáo không là chủ tài khoản | Đã khớp với ADR-0005; nâng thành luật CONSTITUTION §2.2 | Không đổi hướng, chỉ khoá chặt hơn |
+
+Phản biện còn giữ: RPG cho người lớn phải **thật sự vui**, không thể chỉ là "bài mầm non cho người lớn chơi". Vòng chơi cần anh Nam duyệt (Q-12) trước khi thiết kế chi tiết M3. Chat chữ mở giữa người lớn cần người xử lý báo cáo; đây là chi phí vận hành thật (T17).
+
+## 9. Câu hỏi cho anh Nam
 
 Danh sách đầy đủ, phân biệt blocker/không blocker: [`DECISIONS.md` › Câu hỏi chủ dự án](DECISIONS.md#câu-hỏi-chủ-dự-án).

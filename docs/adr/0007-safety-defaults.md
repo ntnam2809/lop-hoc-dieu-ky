@@ -2,6 +2,8 @@
 
 **Trạng thái:** Accepted · 2026-11-06 · module `safety` · chi tiết: `docs/SAFETY.md`
 
+> Phạm vi 2026-11-06 (ADR-0014): các mặc định này áp cho không gian `organization` (có trẻ). Không gian `play` chỉ có người lớn, chat chữ mặc định mở, có moderation — xem ADR-0015 và `docs/SAFETY.md` T14–T17.
+
 ## Quyết định
 1. Không danh bạ trường/lớp công khai — vào lớp bằng mã giáo viên chia sẻ (mã do server sinh ngẫu nhiên an toàn).
 2. Không hub công cộng, không thăm trường khác.

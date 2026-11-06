@@ -34,6 +34,14 @@ Trẻ (thân thể, tinh thần) · danh tính và dữ liệu học tập của
 | T11 | Dữ liệu trẻ tồn tại mãi | Chính sách lưu/xoá/xuất theo Q-02; hồ sơ trẻ thuộc trường, xoá theo trường | Q-02 |
 | T12 | Thiết bị dùng chung ở lớp | Phiên thiết bị trẻ có hạn, đăng xuất khi rời lớp; không lưu thông tin đăng nhập trẻ | M3 |
 | T13 | Nội dung bài sai/không phù hợp | Validator + duyệt chuyên môn; AI không tự xuất bản | ✓ (pipeline sẵn có) |
+| T14 | Người lớn từ trường chơi tiếp cận trẻ ở tổ chức | Hai không gian tách hẳn (ADR-0014): trường chơi không có hồ sơ trẻ; lớp tổ chức không nhận người lớn làm học sinh; không chung campus/phiên/chat | ✓ `policy.test.ts` |
+| T15 | Tổ chức giả để có trẻ | Tổ chức sinh ra chưa xác minh; chỉ quản trị nền tảng xác minh; chưa xác minh thì không tạo được hồ sơ trẻ | ✓ domain · quy trình Q-13 |
+| T16 | Livestream lộ trẻ hoặc người dùng khác | Cấm livestream ở tổ chức (CONSTITUTION §2.7); streamer mode ẩn tên người khác + mã lớp; dấu "đang phát" cho cả room; streamer mode chặn vào trường tổ chức | M3 · E2E chụp màn hình |
+| T17 | Quấy rối giữa người lớn ở trường chơi (chat chữ mở) | Rate limit, ẩn tin, báo cáo, chặn người dùng (M3), hàng chờ moderation của nền tảng cho campus trải nghiệm chính thức | báo cáo ✓ · chặn M3 · người xử lý: Q-04/vận hành |
+
+## 3b. Phạm vi hai không gian
+- **Trường chơi (`play`):** chỉ người lớn, mặc định chat chữ mở, được livestream bằng streamer mode. Rủi ro chính là quấy rối giữa người lớn (T17) và lộ thông tin người khác khi phát (T16).
+- **Tổ chức (`organization`):** có trẻ; áp toàn bộ mặc định của ADR-0007; không livestream; người lớn chỉ là hiệu trưởng/giáo viên đã được cấp vai.
 
 ## 4. Dữ liệu cá nhân — tối thiểu hoá
 

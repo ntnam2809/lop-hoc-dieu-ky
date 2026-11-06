@@ -50,9 +50,11 @@ describe('chat trong phiên + báo cáo', () => {
   it('học sinh gửi câu duyệt sẵn, báo cáo đến hiệu trưởng, giáo viên ẩn được tin', () => {
     let t = 0;
     const svc = new SchoolService({ clock: () => (t += 10_000) });
+    const admin = svc.registerUser({ displayName: 'Quản trị', platformAdmin: true });
     const owner = svc.registerUser({ displayName: 'Chủ', planId: 'pilot' });
     const teacher = svc.registerUser({ displayName: 'Cô' });
-    const school = svc.createSchool(owner.id, { name: 'Trường', level: 'kindergarten' });
+    const school = svc.createSchool(owner.id, { name: 'Trường', level: 'kindergarten', kind: 'organization' });
+    svc.verifyOrganization(admin.id, school.id);
     svc.grantTeacher(owner.id, school.id, teacher.id);
     const klass = svc.createClass(teacher.id, school.id, { name: 'Lá 2', capacity: 10 });
     const kid = svc.createManagedStudent(teacher.id, klass.id, 'Bé Bông');

@@ -2,6 +2,8 @@
 
 **Trạng thái:** Accepted cho MVP; mô hình đồng ý phụ huynh chờ Q-02 · 2026-11-06 · module `school` + `safety`
 
+> Bổ sung 2026-11-06 (ADR-0014): hồ sơ trẻ chỉ có ở tổ chức **đã xác minh**; trẻ không là chủ tài khoản.
+
 ## Quyết định
 - **Người lớn** (hiệu trưởng, giáo viên, người thử) đăng nhập qua nhà cung cấp OAuth/magic link có sẵn (ứng viên: Firebase Auth vì repo đã dùng Firebase; chọn ở M2). Server chỉ giữ `userId` + tên hiển thị + nhóm tuổi + gói.
 - **Trẻ** không có thông tin đăng nhập, không email. Giáo viên tạo hồ sơ (`createManagedStudent`) thuộc trường. Trẻ vào trên thiết bị có người lớn giám sát: mã lớp → chọn hình đại diện của mình (picture login), phiên thiết bị có hạn.

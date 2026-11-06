@@ -52,7 +52,8 @@
 Subagent không spawn được subagent → mọi phiếu đi qua manager. Sáng tác định hướng sản phẩm và quyết định không giao ra ngoài.
 
 ## Luật bất biến (tóm tắt — nguyên văn ở `CONSTITUTION.md`)
-- **An toàn trẻ là kiến trúc:** trẻ không tự đăng ký, không gõ chữ tự do, không DM/voice/phòng riêng; vai quản trị chỉ người lớn, có phạm vi; mọi hành động đặc quyền có kiểm toán. Không pilot có trẻ thật trước Q-02.
+- **Người lớn trước, trẻ sau, hai không gian tách hẳn** (ADR-0014): trường chơi `play` chỉ người lớn (RPG, livestream bằng streamer mode); trẻ chỉ ở tổ chức `organization` đã xác minh, giáo viên thật quản lý; trẻ không là chủ tài khoản; không livestream nơi có trẻ.
+- **An toàn trẻ là kiến trúc:** trẻ không tự đăng ký, không gõ chữ tự do, không DM/voice/phòng riêng; vai quản trị chỉ người lớn, có phạm vi; mọi hành động đặc quyền có kiểm toán. Không pilot có trẻ thật trước Q-02/Q-13.
 - **Server là nguồn sự thật;** `packages/domain` thuần, tất định.
 - **Học trước, game sau:** không paywall kiến thức, không streak phạt, không xếp hạng trẻ.
 - **Nội dung là dữ liệu;** AI không tự xuất bản bài.

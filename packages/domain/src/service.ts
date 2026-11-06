@@ -16,6 +16,7 @@ import type {
   PlanId,
   School,
   SchoolClass,
+  SchoolKind,
   SchoolLevel,
   SchoolRole,
   Timestamp,
@@ -144,16 +145,24 @@ export class SchoolService {
    * Tạo tài khoản người lớn (dev/test; xác thực thật ở ADR-0005). Trẻ em KHÔNG tự đăng ký —
    * hồ sơ trẻ chỉ sinh qua `createManagedStudent` (CONSTITUTION §2).
    */
-  registerUser(input: { displayName: string; ageBand?: AgeBand; planId?: PlanId }): User {
+  registerUser(input: { displayName: string; ageBand?: AgeBand; planId?: PlanId; platformAdmin?: boolean }): User {
     if ((input.ageBand ?? 'adult') !== 'adult') throw forbidden('Trẻ em không tự đăng ký; giáo viên tạo hồ sơ cho lớp');
-    const u: User = { id: this.id('user'), displayName: cleanName(input.displayName, 'Tên'), ageBand: 'adult', planId: input.planId ?? 'free', createdAt: this.now() };
+    const u: User = {
+      id: this.id('user'),
+      displayName: cleanName(input.displayName, 'Tên'),
+      ageBand: 'adult',
+      planId: input.planId ?? 'free',
+      ...(input.platformAdmin ? { platformAdmin: true } : {}),
+      createdAt: this.now(),
+    };
     this.store.users.set(u.id, u);
     return u;
   }
 
   // ───────────── trường & vai ─────────────
 
-  createSchool(actorId: Id, input: { name: string; level: SchoolLevel; studentCapacity?: number }): School {
+  /** Mặc định `play` (không gian người lớn). `organization` sinh ở trạng thái chưa xác minh. */
+  createSchool(actorId: Id, input: { name: string; level: SchoolLevel; kind?: SchoolKind; studentCapacity?: number }): School {
     const actor = this.user(actorId);
     this.requireAdult(actor, 'Lập trường');
     const lim = this.limitsFor(actor);
@@ -161,11 +170,35 @@ export class SchoolService {
     if (owned >= lim.maxOwnedSchools) throw quota(`Gói hiện tại cho làm chủ tối đa ${lim.maxOwnedSchools} trường`);
     const cap = input.studentCapacity ?? lim.maxStudentsPerSchool;
     if (cap < 1 || cap > lim.maxStudentsPerSchool) throw quota(`Sĩ số trường tối đa ${lim.maxStudentsPerSchool}`);
-    const s: School = { id: this.id('school'), name: cleanName(input.name, 'Tên trường'), level: input.level, ownerId: actorId, studentCapacity: cap, createdAt: this.now() };
+    const s: School = {
+      id: this.id('school'),
+      name: cleanName(input.name, 'Tên trường'),
+      level: input.level,
+      kind: input.kind ?? 'play',
+      ownerId: actorId,
+      studentCapacity: cap,
+      createdAt: this.now(),
+    };
     this.store.schools.set(s.id, s);
     this.addRole(s.id, actorId, 'principal');
-    this.audit(actorId, 'school.create', s.id, s.id, { level: s.level });
+    this.audit(actorId, 'school.create', s.id, s.id, { level: s.level, kind: s.kind });
     return s;
+  }
+
+  /** Quản trị nền tảng xác nhận đây là tổ chức có thật, giáo viên thật (quy trình xác minh: Q-13). */
+  verifyOrganization(actorId: Id, schoolId: Id): School {
+    if (!this.user(actorId).platformAdmin) throw forbidden('Chỉ quản trị nền tảng mới xác minh tổ chức');
+    const s = this.school(schoolId);
+    if (s.kind !== 'organization') throw invalid('Chỉ trường dạng tổ chức mới cần xác minh');
+    if (s.verifiedAt) throw conflict('Tổ chức đã được xác minh');
+    s.verifiedAt = this.now();
+    s.verifiedBy = actorId;
+    this.audit(actorId, 'school.verify', s.id, s.id);
+    return s;
+  }
+
+  isVerifiedOrganization(s: School): boolean {
+    return s.kind === 'organization' && s.verifiedAt !== undefined;
   }
 
   /** Hiệu trưởng cấp vai giáo viên trong trường của mình. MVP không cấp/chuyển vai hiệu trưởng (Q-05). */
@@ -232,6 +265,9 @@ export class SchoolService {
   createManagedStudent(actorId: Id, classId: Id, displayName: string): User {
     const c = this.klass(classId);
     if (!this.canManageClass(actorId, c)) throw forbidden('Chỉ giáo viên/hiệu trưởng của lớp mới tạo hồ sơ học sinh');
+    if (!this.isVerifiedOrganization(this.school(c.schoolId))) {
+      throw forbidden('Hồ sơ trẻ chỉ có ở tổ chức thật đã xác minh — trường chơi của người lớn không có trẻ');
+    }
     const u: User = {
       id: this.id('user'),
       displayName: cleanName(displayName, 'Tên hiển thị'),
@@ -246,11 +282,17 @@ export class SchoolService {
     return u;
   }
 
-  /** Người dùng tự vào lớp bằng mã giáo viên đưa. MVP không có danh bạ trường công khai (ADR-0007). */
+  /**
+   * Người lớn tự vào lớp **trường chơi** bằng mã. Lớp của tổ chức có trẻ không nhận người lớn làm học sinh
+   * — không trộn người lớn với trẻ (ADR-0014). MVP không có danh bạ trường công khai (ADR-0007).
+   */
   enrollWithCode(actorId: Id, joinCode: string): SchoolClass {
     this.user(actorId);
     const c = [...this.store.classes.values()].find((k) => k.joinCode === joinCode);
     if (!c) throw notFound('lớp với mã này');
+    if (this.school(c.schoolId).kind === 'organization') {
+      throw forbidden('Lớp của tổ chức chỉ nhận học sinh do giáo viên tạo hồ sơ');
+    }
     this.enroll(c, actorId, actorId);
     return c;
   }
@@ -269,7 +311,8 @@ export class SchoolService {
       teacherId: actorId,
       status: 'live',
       currentActivityId: null,
-      chatMode: 'phrases',
+      // Trường chơi (chỉ người lớn) mặc định chat mở; tổ chức có trẻ mặc định câu/sticker.
+      chatMode: this.school(c.schoolId).kind === 'play' ? 'open' : 'phrases',
       participants: [actorId],
       startedAt: this.now(),
     };

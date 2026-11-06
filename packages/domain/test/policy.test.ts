@@ -3,16 +3,18 @@ import { DomainError, SchoolService } from '../src';
 
 function world() {
   const svc = new SchoolService();
+  const admin = svc.registerUser({ displayName: 'Quản trị', platformAdmin: true });
   const ownerA = svc.registerUser({ displayName: 'Chủ A', planId: 'pilot' });
   const ownerB = svc.registerUser({ displayName: 'Chủ B', planId: 'pilot' });
   const teacherA = svc.registerUser({ displayName: 'GV A' });
   const teacherB = svc.registerUser({ displayName: 'GV B' });
-  const schoolA = svc.createSchool(ownerA.id, { name: 'Trường A', level: 'kindergarten' });
+  const schoolA = svc.createSchool(ownerA.id, { name: 'Trường A', level: 'kindergarten', kind: 'organization' });
+  svc.verifyOrganization(admin.id, schoolA.id);
   const schoolB = svc.createSchool(ownerB.id, { name: 'Trường B', level: 'primary' });
   svc.grantTeacher(ownerA.id, schoolA.id, teacherA.id);
   svc.grantTeacher(ownerB.id, schoolB.id, teacherB.id);
   const classA = svc.createClass(teacherA.id, schoolA.id, { name: 'Lá 1', capacity: 2 });
-  return { svc, ownerA, ownerB, teacherA, teacherB, schoolA, schoolB, classA };
+  return { svc, admin, ownerA, ownerB, teacherA, teacherB, schoolA, schoolB, classA };
 }
 
 const code = (fn: () => unknown) => {
@@ -105,10 +107,36 @@ describe('sức chứa & phiên', () => {
     expect(code(() => svc.submitResult(kid.id, s.id, 'a1', 'x'))).toBe('OK');
   });
 
-  it('không ghi danh hai lần, giáo viên không làm học sinh lớp mình', () => {
-    const { svc, teacherA, classA } = world();
-    const kid = svc.createManagedStudent(teacherA.id, classA.id, 'Bé Tí');
-    expect(code(() => svc.enrollWithCode(kid.id, classA.joinCode))).toBe('CONFLICT');
-    expect(code(() => svc.enrollWithCode(teacherA.id, classA.joinCode))).toBe('CONFLICT');
+  it('trường chơi: không ghi danh hai lần, giáo viên không làm học sinh lớp mình', () => {
+    const { svc, ownerB, teacherB, schoolB } = world();
+    const parent = svc.registerUser({ displayName: 'Phụ huynh' });
+    const playClass = svc.createClass(teacherB.id, schoolB.id, { name: 'Lớp thử', capacity: 5 });
+    svc.enrollWithCode(parent.id, playClass.joinCode);
+    expect(code(() => svc.enrollWithCode(parent.id, playClass.joinCode))).toBe('CONFLICT');
+    expect(code(() => svc.enrollWithCode(teacherB.id, playClass.joinCode))).toBe('CONFLICT');
+    expect(code(() => svc.createManagedStudent(ownerB.id, playClass.id, 'Bé'))).toBe('FORBIDDEN');
+  });
+});
+
+describe('hai không gian: trường chơi người lớn ↔ tổ chức có trẻ (ADR-0014)', () => {
+  it('chỉ quản trị nền tảng xác minh tổ chức; tổ chức chưa xác minh không có trẻ', () => {
+    const { svc, admin, ownerB, teacherB } = world();
+    const owner = svc.registerUser({ displayName: 'Chủ C', planId: 'pilot' });
+    const org = svc.createSchool(owner.id, { name: 'Mầm non C', level: 'kindergarten', kind: 'organization' });
+    svc.grantTeacher(owner.id, org.id, owner.id);
+    const k = svc.createClass(owner.id, org.id, { name: 'Lá', capacity: 5 });
+    expect(code(() => svc.createManagedStudent(owner.id, k.id, 'Bé'))).toBe('FORBIDDEN');
+    expect(code(() => svc.verifyOrganization(ownerB.id, org.id))).toBe('FORBIDDEN');
+    expect(code(() => svc.verifyOrganization(teacherB.id, org.id))).toBe('FORBIDDEN');
+    svc.verifyOrganization(admin.id, org.id);
+    expect(code(() => svc.verifyOrganization(admin.id, org.id))).toBe('CONFLICT');
+    expect(code(() => svc.createManagedStudent(owner.id, k.id, 'Bé'))).toBe('OK');
+  });
+
+  it('người lớn không vào lớp có trẻ bằng mã; trường chơi không xác minh được', () => {
+    const { svc, admin, classA, schoolB } = world();
+    const stranger = svc.registerUser({ displayName: 'Người lạ' });
+    expect(code(() => svc.enrollWithCode(stranger.id, classA.joinCode))).toBe('FORBIDDEN');
+    expect(code(() => svc.verifyOrganization(admin.id, schoolB.id))).toBe('INVALID');
   });
 });

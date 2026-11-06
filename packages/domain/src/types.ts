@@ -18,18 +18,32 @@ export interface User {
   displayName: string;
   ageBand: AgeBand;
   planId: PlanId;
-  /** Hồ sơ trẻ do giáo viên tạo cho lớp (không tự đăng ký): id trường quản lý hồ sơ. */
+  /** Hồ sơ trẻ do giáo viên tạo cho lớp (không tự đăng ký): id trường quản lý hồ sơ. Trẻ không bao giờ là chủ tài khoản. */
   managedBySchoolId?: Id;
+  /** Quản trị nền tảng (xác minh tổ chức). Chỉ gán bằng seed/CLI nội bộ, không bao giờ qua API công khai. */
+  platformAdmin?: boolean;
   createdAt: Timestamp;
 }
 
 export type SchoolLevel = 'kindergarten' | 'primary' | 'secondary' | 'university';
+
+/**
+ * Hai không gian tách hẳn nhau (ADR-0014):
+ * - `play`: trường chơi của người lớn (phụ huynh trải nghiệm RPG, hiểu cơ chế). **Không có hồ sơ trẻ.**
+ * - `organization`: trường/tổ chức có thật bên ngoài, giáo viên thật quản lý. Trẻ chỉ tham gia ở đây,
+ *   và chỉ sau khi quản trị nền tảng xác minh tổ chức. Người lớn ở đây chỉ mang vai quản trị/giáo viên.
+ */
+export type SchoolKind = 'play' | 'organization';
 export type SchoolRole = 'principal' | 'teacher' | 'student';
 
 export interface School {
   id: Id;
   name: string;
   level: SchoolLevel;
+  kind: SchoolKind;
+  /** Chỉ với `organization`: thời điểm quản trị nền tảng xác minh tổ chức có thật. */
+  verifiedAt?: Timestamp;
+  verifiedBy?: Id;
   ownerId: Id;
   /** Sĩ số tối đa toàn trường (học sinh). */
   studentCapacity: number;
@@ -118,6 +132,7 @@ export interface ModerationReport {
 
 export type AuditAction =
   | 'school.create'
+  | 'school.verify'
   | 'role.grant'
   | 'role.revoke'
   | 'class.create'

@@ -1,6 +1,6 @@
 # Lớp Học Diệu Kỳ — Trường Học Online
 
-Trường học 2D trực tuyến cho việc học tương tác: người lớn lập trường, mở lớp, dẫn phiên học; học sinh có nhân vật, đi lại trong khuôn viên, vào phòng học chơi-học theo nhịp cô. Slice đầu tiên: **một trường mầm non** dùng lại các bài học sẵn có.
+Trường học 2D trực tuyến cho việc học tương tác: người lớn lập trường, mở lớp, dẫn phiên học; học sinh có nhân vật, đi lại trong khuôn viên, vào phòng học chơi-học theo nhịp cô. Phương châm: **phụ huynh chơi trước** ở trường chơi chỉ có người lớn (RPG, hiểu cơ chế, được livestream quảng bá); **trẻ chỉ tham gia qua tổ chức có thật** do giáo viên thật quản lý, và không là chủ tài khoản. Nội dung đầu tiên là các bài mầm non sẵn có.
 
 > **Trạng thái deploy:** GitHub Pages vẫn đang phục vụ **bản chơi thử** (đồ dùng dạy học số cho trẻ 5 tuổi) từ `index.html` + `assets/` ở gốc repo. Các file này là bản build, được giữ nguyên cho tới khi chuyển deploy sang build tự động (`docs/MIGRATION.md`).
 

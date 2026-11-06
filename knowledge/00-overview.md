@@ -1,12 +1,17 @@
 # Tổng quan cho Manager (L0)
 
 ## Sản phẩm một câu
-Trường học 2D trực tuyến: người lớn lập trường, mở lớp, dẫn phiên học tương tác; học sinh có nhân vật, đi lại trong campus, vào phòng học chơi-học theo nhịp cô. Slice đầu: một trường mầm non (`docs/DESIGN.md`, `docs/MVP.md`).
+Trường học 2D trực tuyến: người lớn lập trường, mở lớp, dẫn phiên học tương tác; học sinh có nhân vật, đi lại trong campus, vào phòng học chơi-học theo nhịp cô (`docs/DESIGN.md`, `docs/MVP.md`).
+
+## Phương châm (anh Nam, 2026-11-06)
+- **MVP-A:** phụ huynh chơi trước ở **trường chơi** (`play`, chỉ người lớn): RPG, hiểu cơ chế, livestream TikTok bằng streamer mode.
+- **MVP-B:** trẻ chỉ tham gia qua **tổ chức có thật đã xác minh** (`organization`), giáo viên thật quản lý. Không livestream ở đây.
+- Trẻ mẫu giáo **không là chủ tài khoản**. Hai không gian tách hẳn (ADR-0014, ADR-0015).
 
 ## Mốc hiện tại
-- **M0 ✓** (HO-0012): review · thiết kế · ADR 0001–0013 · constitution · agent · monorepo · `packages/domain` (18 test) · `apps/classroom` (prototype source, xanh).
+- **M0 ✓** (HO-0012): review · thiết kế · ADR 0001–0015 · constitution · agent · monorepo · `packages/domain` (21 test, hai không gian) · `apps/classroom` (prototype source, xanh).
 - **M1 kế tiếp:** spike S1 (campus Phaser + room realtime, đo tablet) · port engine delta để 4 bài khôi phục vào build.
-- Sau đó: M2 server + Postgres · M3 campus + phòng học đồng bộ + staging · M4 an toàn/pháp lý trước pilot.
+- Sau đó: M2 server + Postgres · **M3 = MVP-A** (người lớn, RPG, streamer mode) · **M4 = MVP-B** (tổ chức + trẻ).
 
 ## Bản đồ code
 
@@ -31,8 +36,8 @@ Trường học 2D trực tuyến: người lớn lập trường, mở lớp, d
 | Chạm ≥ 2 module | mỗi lead một phần; manager ghép thứ tự theo hợp đồng |
 
 ## Đang chờ anh Nam (blocker)
-- **Q-02** pháp lý/đồng ý phụ huynh → chặn mọi pilot có trẻ thật.
-- **Q-04** hosting/ngân sách → chặn staging online (M3).
+- **Q-02** đồng ý phụ huynh/trách nhiệm dữ liệu · **Q-13** xác minh tổ chức → chặn MVP-B.
+- **Q-04** hosting/ngân sách · **Q-12** vòng chơi RPG người lớn → chặn MVP-A (M3).
 - Danh sách đủ: `docs/DECISIONS.md` › Câu hỏi chủ dự án.
 
 ## Lệnh

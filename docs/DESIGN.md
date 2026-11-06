@@ -3,15 +3,23 @@
 **Trạng thái:** chính thức sau review HO-0012 · 2026-11-06 · Phạm vi mỗi mục có nhãn **[MVP]** · **[Phase N]** · **[LATER]**
 Nguồn: prompt gốc ([`00-ORIGINAL-USER-PROMPT.md`](00-ORIGINAL-USER-PROMPT.md)) → phản biện ([`PRODUCT_REVIEW.md`](PRODUCT_REVIEW.md)) → tài liệu này. Kỹ thuật chi tiết ở ADR ([`DECISIONS.md`](DECISIONS.md)).
 
+## 0. Phương châm của chủ dự án (2026-11-06)
+
+1. **MVP có hai mục đích.** (a) Kéo **phụ huynh** trước bằng gameplay RPG: người lớn chơi được, giải trí được, hiểu cơ chế trước khi cho con tham gia. (b) **Trẻ tham gia qua một tổ chức có thật bên ngoài**, do giáo viên thật quản lý.
+2. **Người lớn livestream TikTok** để quảng bá sản phẩm.
+3. **Trẻ mẫu giáo không là chủ tài khoản.**
+
+Cách hiện thực: hai không gian tách hẳn nhau (ADR-0014). Trường **chơi** (`play`) chỉ có người lớn, là nơi có RPG và được livestream. Trường **tổ chức** (`organization`) phải qua xác minh, là nơi duy nhất có trẻ, không livestream (ADR-0015). Cùng một vòng đời trường → lớp → phiên học chạy ở cả hai không gian. Nhờ vậy, phụ huynh chơi bên trường chơi chính là đang "học cơ chế" mà con sẽ dùng.
+
 ## 1. Định vị
 
 **Lớp Học Diệu Kỳ** là trường học 2D trực tuyến: người lớn lập trường, mở lớp, dẫn phiên học tương tác; học sinh có nhân vật, đi lại trong khuôn viên trường, vào phòng học để chơi-học cùng cô và bạn.
 
 Lõi trải nghiệm theo thứ tự ưu tiên:
-1. **Học cùng nhau trong phòng học** — phiên học trực tiếp do giáo viên điều nhịp, mỗi học sinh tương tác trên thiết bị của mình. *[MVP]*
-2. **Thuộc về một ngôi trường** — trường có tên, khuôn viên, thầy cô, lớp, bạn cùng lớp. *[MVP]*
-3. **Đi lại, khám phá, gặp gỡ** — campus 2D, emote, đồ vật tương tác. *[MVP tối thiểu → Phase 1]*
-4. **Kiến tạo** — tùy biến trường, tự soạn bài, sự kiện liên trường. *[Phase 3+]*
+1. **Nhập vai một ngôi trường (người lớn)**: tạo nhân vật, đi lại trong campus, nhận vai học sinh, giáo viên hoặc hiệu trưởng, làm nhiệm vụ, mở lớp, đứng lớp thử cho người lớn khác. *[MVP-A]*
+2. **Học cùng nhau trong phòng học**: phiên học trực tiếp do giáo viên điều nhịp, mỗi người tương tác trên thiết bị của mình. Phụ huynh chơi đúng bài con sẽ học. *[MVP-A người lớn · MVP-B trẻ qua tổ chức]*
+3. **Thuộc về một ngôi trường**: trường có tên, khuôn viên, thầy cô, lớp, bạn cùng lớp. *[MVP]*
+4. **Kiến tạo**: tùy biến trường, tự soạn bài, sự kiện liên trường. *[Phase 3+]*
 
 Không phải: MMO thế giới mở, mạng xã hội cho trẻ, LMS gắn avatar.
 
@@ -22,9 +30,11 @@ Không phải: MMO thế giới mở, mạng xã hội cho trẻ, LMS gắn avat
 | Hiệu trưởng (`principal`) | Người lớn lập trường (gói cho phép) | Cấp/thu hồi giáo viên, xem tiến độ mọi lớp, xử lý báo cáo, xem nhật ký kiểm toán | Một trường |
 | Giáo viên (`teacher`) | Người lớn được hiệu trưởng cấp vai | Mở lớp, tạo hồ sơ trẻ, chia mã lớp, mở/điều khiển/đóng phiên, đặt chế độ chat, ẩn tin | Lớp mình dạy trong trường đã cấp |
 | Học sinh (`student`) | Hồ sơ trẻ do cô tạo, hoặc người dùng vào bằng mã lớp | Đi lại campus, vào phiên học, tương tác, nộp kết quả, gửi câu/sticker, báo cáo | Lớp đã ghi danh |
-| Phụ huynh | — | *[LATER, Q-02]* xem tiến độ con, quản lý đồng ý | Con mình |
+| Người chơi người lớn (phụ huynh) | Bất kỳ người lớn nào | Chơi RPG ở trường chơi, nhận mọi vai trong đó, livestream (streamer mode) | Trường chơi |
+| Phụ huynh có con trong tổ chức | — | *[LATER, Q-15]* xem tiến độ con khi tổ chức xác nhận liên kết | Con mình |
+| Quản trị nền tảng | Đội vận hành | Xác minh tổ chức có thật (Q-13) | Toàn nền tảng, chỉ thao tác xác minh |
 
-Một người có thể giữ nhiều vai ở nhiều trường (ADR-0006). Vai quản trị chỉ cho người lớn.
+Một người có thể giữ nhiều vai ở nhiều trường (ADR-0006). Vai quản trị chỉ cho người lớn. Ở trường tổ chức, người lớn **chỉ** là hiệu trưởng hoặc giáo viên; học sinh là hồ sơ trẻ do cô tạo (trẻ không là chủ tài khoản).
 
 ## 3. Loại trường
 
@@ -44,7 +54,7 @@ Giáo viên ──đóng phiên──► Kết quả xem được theo quyền (
 
 ## 5. Thế giới 2D
 
-- **Topology** (ADR-0008): mỗi trường một campus instance (~40 người). Phòng học là room riêng của phiên học. Không hub công cộng trong MVP.
+- **Topology** (ADR-0008, ADR-0014): mỗi trường một campus instance (~40 người); phòng học là room riêng của phiên học. Có **campus trải nghiệm chính thức** (một trường chơi do nền tảng vận hành, nhiều instance) để phụ huynh vào chơi ngay. Không có hub chung giữa trường chơi và tổ chức; trẻ không bao giờ vào campus trường chơi.
 - **Campus MVP:** Cổng trường (bảng thông báo, điểm xuất hiện) · Sân trường (đồ vật tương tác: xích đu, bóng, cây; emote) · Phòng học 1 & 2 (cửa chỉ mở cho lớp có phiên). *[MVP]*
 - **Mở rộng:** thư viện, phòng thí nghiệm, phòng mỹ thuật, căng-tin, hội trường, vườn, phòng CLB *[Phase 1–4]*; mỗi khu chỉ thêm khi có hoạt động thật cho nó.
 - **Điều khiển:** chạm-để-đi (trẻ) · joystick ảo · WASD/phím mũi tên. Chạm avatar → thẻ tên (chỉ tên hiển thị). Emote: vẫy tay, giơ tay, vỗ tay, nhảy, ngồi.
@@ -67,11 +77,18 @@ Giáo viên ──đóng phiên──► Kết quả xem được theo quyền (
 - Quy trình: AI soạn → `review` → chuyên môn duyệt → xuất bản (CONSTITUTION §4).
 - Tự tạo bài (R8) *[Phase 3]*: trình soạn theo khối, bài người dùng tạo đi qua cùng validator + duyệt; chỉ gói trả phí.
 
-## 8. Tiến trình & phần thưởng
+## 8. Gameplay RPG cho người lớn & tiến trình
 
-- *[MVP]* Huy hiệu hoàn thành bài trên thẻ học sinh; tiến độ lớp cho giáo viên. Không điểm số công khai.
-- *[Phase 2+]* Trang phục avatar mở bằng hoạt động (không mua bằng tiền thật ở bản trẻ em), portfolio tác phẩm.
-- *[LATER]* EXP/đóng góp/tiền trang trí — chỉ khi có thiết kế kinh tế được duyệt. Cấm streak phạt và xếp hạng cá nhân giữa trẻ (CONSTITUTION §1.3).
+**Không gian người lớn (trường chơi)** *[MVP-A]*. Khung đề xuất, vòng chơi cụ thể chờ anh Nam duyệt (Q-12):
+- **Nhân vật:** tạo avatar, trang phục, thẻ hồ sơ.
+- **Nhập vai trường học:** đi đủ vòng đời của prompt gốc. Vào trường bằng mã → học sinh → được cấp vai giáo viên → mở lớp → đứng lớp cho người lớn khác. Gói `pilot` lập được trường riêng.
+- **Chuỗi nhiệm vụ "Một ngày ở Trường Diệu Kỳ":** check-in ở cổng · tìm đồ vật ở sân · học thử một bài đúng như con sẽ học · đứng lớp thử một phiên · xem lớp học bằng **chế độ "nhìn như con"** (giao diện câu/sticker của trẻ).
+- **Tiến trình:** EXP, cấp nhân vật, huy hiệu, trang phục mở bằng nhiệm vụ. Không loot box, không bán lợi thế, không ép đăng nhập (CONSTITUTION §1.5).
+- **Xã hội:** chat chữ giữa người lớn trong phiên và ở sân trường, có báo cáo/chặn/rate limit. Emote. Livestream có streamer mode (ADR-0015).
+
+**Không gian có trẻ (tổ chức)** *[MVP-B]*:
+- Huy hiệu hoàn thành bài trên thẻ học sinh; tiến độ lớp cho giáo viên. Không điểm số công khai, không EXP, không tiền tệ, không xếp hạng (CONSTITUTION §1.3).
+- *[Phase 2+]* Trang phục avatar của trẻ mở bằng hoạt động, không mua bằng tiền thật; portfolio tác phẩm.
 
 ## 9. Cộng đồng *[Phase 1–4]*
 
@@ -94,9 +111,9 @@ apps/classroom (engine     ├─ WebSocket/HTTP ─► apps/server (M2) ─┤
 
 | Mốc | Nội dung | Điều kiện vào |
 |---|---|---|
-| **M0** ✓ | Review, thiết kế, ADR, constitution, agent, init monorepo, lõi domain, migrate source | — |
-| **M1** | Spike S1: campus Phaser + room realtime, 2+ client thấy nhau, reconnect, đo tablet · port engine delta, đưa 4 bài khôi phục về build | anh Nam duyệt PR M0 |
-| **M2** | `apps/server`: domain qua HTTP/WS, auth người lớn (dev), Postgres adapter, grader từ gói bài | S1 đạt tiêu chí ADR-0003 |
-| **M3** | Campus MVP (cổng · sân · 2 phòng) + phòng học đồng bộ theo nhịp cô + panel chat · staging cho người lớn · cutover Pages | Q-04 |
-| **M4** | Rà soát an toàn/riêng tư, playtest người lớn đóng vai, chuẩn bị pilot | Q-01, Q-02 |
-| Phase 1–4 | Social alpha → Learning beta → Creator & gói trả phí → Cộng đồng (theo đề xuất HO-0012, mỗi phase một review) | sau pilot |
+| **M0** ✓ | Review, thiết kế, ADR, constitution, agent, init monorepo, lõi domain (hai không gian), migrate source | — |
+| **M1** | Spike S1: campus Phaser + room realtime, 2+ client thấy nhau, reconnect, đo trên tablet và điện thoại · port engine delta, đưa 4 bài khôi phục về build | anh Nam duyệt PR M0 |
+| **M2** | `apps/server`: domain qua HTTP/WS, auth người lớn, Postgres adapter, grader từ gói bài | S1 đạt tiêu chí ADR-0003 |
+| **M3 = MVP-A** | Campus trường chơi (cổng · sân · 2 phòng) + nhân vật + chuỗi nhiệm vụ + phòng học đồng bộ + chat người lớn có moderation + streamer mode · **mở cho phụ huynh, livestream quảng bá** | Q-04, Q-12 |
+| **M4 = MVP-B** | Xác minh tổ chức + hồ sơ trẻ + lớp có trẻ chạy trên tablet tại tổ chức · rà soát an toàn/riêng tư · pilot với một tổ chức thật | Q-02, Q-13 |
+| Phase 1–4 | Social alpha → Learning beta → Creator & gói trả phí → Cộng đồng (mỗi phase một review) | sau pilot |
