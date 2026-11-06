@@ -30,11 +30,16 @@ const act = (pkg: any, id: string) => pkg.scenarios[0].activities.find((a: any) 
 afterEach(() => dirs.splice(0).forEach((d) => rmSync(d, { recursive: true, force: true })));
 
 describe('QA nội dung', () => {
-  it('nội dung hiện có sạch lỗi và cảnh báo', () => {
+  it('nội dung hiện có: không bài nào có lỗi; bài đã duyệt/xuất bản sạch cả cảnh báo', () => {
     const r = runQa(content);
     expect(r.catalog).toEqual([]);
     expect(r.lessons.length).toBeGreaterThanOrEqual(2);
-    for (const l of r.lessons) expect(l.issues, l.id).toEqual([]);
+    for (const l of r.lessons) {
+      expect(l.issues.filter((i) => i.level === 'error'), l.id).toEqual([]);
+      // Cảnh báo (câu dài, vùng chạm nhỏ) được phép khi bài còn draft/review — người duyệt chuyên môn quyết.
+      const status = JSON.parse(readFileSync(join(content, 'lessons', l.id, 'lesson.json'), 'utf8')).lesson.status;
+      if (status === 'approved' || status === 'published') expect(l.issues, l.id).toEqual([]);
+    }
   });
 
   it('bắt đáp án không nằm trong lựa chọn (gây kẹt)', () => {

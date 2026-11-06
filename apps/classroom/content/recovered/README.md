@@ -1,16 +1,7 @@
-# Bài khôi phục từ bản build (chưa nạp vào app)
+# recovered/
 
-Bốn bài dưới đây chỉ còn trong bản build deploy (commit `e995268` của repo này, 2026-10-06); source của chúng không có ở repo nào. Em khôi phục ngày 2026-11-06:
+Bốn bài `red-riding-hood`, `white-black-buffalo`, `purple-cabbage`, `dancing-rice` đã chuyển sang `content/lessons/` ngày 2026-11-06. Thư mục này chỉ còn README để ghi nguồn gốc.
 
-- `lesson.json`, `assets.json`: lấy nguyên đối tượng JSON từ chunk `assets/lesson-<id>-*.js`, `assets/assets-<id>-*.js` ở gốc repo, chỉ định dạng lại (không sửa nội dung).
-- `assets/*.svg`: file SVG trong build, đổi lại tên gốc (bỏ hash). SVG dùng chung đã bị Vite nhúng thẳng (bird, flower, mushroom, help, owl) → chép từ `lost-apple/` và `float-or-sink/`.
-- `catalog.deployed.json`: catalog của bản deploy (có thêm chủ đề `kitchen-magic`).
-
-| Bài | Vì sao chưa qua validator của source hiện tại |
-|---|---|
-| `red-riding-hood` | Qua (chỉ cảnh báo) — vẫn để đây vì có thể phụ thuộc bản sửa hiệu ứng show/fade bị mất |
-| `white-black-buffalo` | `options[].visual.layers` rỗng |
-| `purple-cabbage` | Tên asset loại `liquid` ngoài quy ước |
-| `dancing-rice` | `ms`/`to` dạng tham số `$x` trong timeline |
-
-Engine của bản deploy mới hơn source. Port theo `docs/MIGRATION.md` bước 4–5. Không sửa dữ liệu ở đây để "cho qua".
+- Nguồn gốc: bundle build ở commit `e995268` (deploy ở gốc repo). `lesson.json`, `assets.json` lấy nguyên đối tượng JSON từ chunk `lesson-<id>-*.js` / `assets-<id>-*.js`; SVG đổi lại tên gốc (bỏ hash). SVG dùng chung chép từ `lost-apple/` và `float-or-sink/`.
+- Delta engine đã port (6 điểm): `$x` ở `ms`/`to`; id asset loại liquid; `layers` rỗng khi có `bg`; show/fade không chớp; topic `kitchen-magic`; chọn giọng vi.
+- Chi tiết: `docs/MIGRATION.md` bước 4–5 và `apps/classroom/docs/architecture.md`.
