@@ -24,7 +24,7 @@ Phiên học bên trong phòng (→ classroom) · bài học (→ learning) · a
 - Asset campus là tạm (vector/tile đơn giản) — không tự chốt visual cuối (HO-0012 ngoài phạm vi).
 
 ## Trạng thái
-Spike S1 (2026-11-06): WO-01 PASS — khung `apps/server` + `apps/campus`, dep pin (phaser 4.2.1, colyseus 0.18.10, @colyseus/sdk 0.18.6, schema 5.0.42), script gốc `check:world`/`test:e2e`. WO-02..06 chưa làm. ADR-0003 chờ số đo.
+Spike S1 (2026-11-06): WO-01 PASS — khung `apps/server` + `apps/campus`, dep pin (phaser 4.2.1, colyseus 0.18.10, @colyseus/sdk 0.18.6, schema 5.0.42), script gốc `check:world`/`test:e2e`. WO-02 PASS (room campus, `movement.ts` thuần, `/health` qua option `express`, schema 5 không decorator, `onDrop` 30 s; joinOrCreate đầy → tự mở room thứ hai, đúng ADR-0008). WO-03 PASS (client Phaser 4.2.1, bundle thô gzip ~398 KiB; reconnect tự viết 1 s/30 s với `room.reconnection.enabled=false`, nhánh token-hết-hạn và `correct` chưa có bằng chứng, giao WO-05). WO-04..06 chưa xong. ADR-0003 chờ số đo.
 Quyết định anh Nam: MVP-A dùng hạ tầng miễn phí, tối đa 20 người/phiên live → campus spike `MAX_CLIENTS=20` (env `CAMPUS_MAX_CLIENTS` chỉ để đo 30 avatar); server chạy được trên host free (ngủ/khởi động lạnh).
 
 ## Việc kế tiếp — Spike S1 (M1)

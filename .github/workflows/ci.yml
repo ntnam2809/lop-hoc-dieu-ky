@@ -15,8 +15,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # domain: typecheck + test · classroom: validate + typecheck + test + build
+      # domain · classroom (validate + typecheck + test + build) · world (server + campus)
       - run: npm run check
+      # một lần cài Chromium dùng chung cho cả classroom và campus
       - run: npx playwright install --with-deps chromium
         working-directory: apps/classroom
-      - run: npm run test:e2e -- --trace off
+      - run: npm run test:e2e
