@@ -38,6 +38,10 @@ Sáu loại "chọn" dùng chung một primitive — thêm loại nhận biết 
 
 Cảnh truyện, mô phỏng thí nghiệm, phần mở/kết của mọi hoạt động đều là danh sách bước dữ liệu: `move` (có `arc` để nhảy cong, `ease` gồm cả `sink`/`float` cho nước) · `show`/`hide` · `anim` (bộ chuyển động có sẵn) · `emote` · `fx` (té nước, gợn sóng, bong bóng, sao, confetti…) · `say` (phụ đề/bong bóng thoại + đọc to) · `wait` · `sound` · `flip` · `scale` · `rotate` · `camera` · `parallel` · `play` (gọi timeline mẫu của kịch bản với tham số `$x`). Chi tiết: [content-guide.md](content-guide.md).
 
+- **Tham số `$x`:** `ms` của `wait` và `to` của `scale`/`rotate` có kiểu `number | Param` (`Param = $${string}`, `types.ts`). Runtime thay giá trị lúc chạy bằng `substitute()` (`runtime/timeline.ts`). Schema (`tools/schema.ts`) nhận số không âm cho `ms`, hoặc chuỗi `$x`.
+- **`visual`:** `layers` rỗng được phép nếu có `bg`; rỗng cả hai là lỗi ("Visual rỗng: cần ít nhất một layer hoặc bg"). Quy tắc áp cả cho `cover` của catalog.
+- **`show` kiểu `fade`:** đặt opacity = 0 và `apply()` rồi mới tween, nên khung đầu không chớp.
+
 ## Hiệu ứng
 
 - **Hạt** (`fx/particles.ts`, canvas): sao bung + vòng sóng khi đúng, té nước + gợn sóng khi rơi xuống nước, chuỗi bong bóng khi chìm, bụi khi chạm đất, tim, nước mắt, confetti; hạt nền theo cảnh (phấn hoa, đom đóm, bướm bay lượn, bụi nắng, bong bóng trong bể).
@@ -45,7 +49,7 @@ Cảnh truyện, mô phỏng thí nghiệm, phần mở/kết của mọi hoạt
 - **Phản hồi**: chữ khen nảy từng ký tự, thẻ đúng gắn huy hiệu; sai thì lắc nhẹ + hai nốt nhạc mời thử lại — **không** có dấu X đỏ, không phụ thuộc màu xanh/đỏ.
 - **Chuyển cảnh**: vòng tròn khép–mở có ngôi sao xoay; camera zoom/pan trong truyện.
 - **Âm thanh**: tổng hợp WebAudio (không cần file), có vang nhẹ; nhạc nền hộp nhạc ngũ cung (mặc định tắt).
-- **Giọng đọc**: Web Speech với giọng tiếng Việt của máy (chỉ đọc văn bản đã duyệt). Không có giọng vi-VN → im lặng, phụ đề vẫn hiện. Gói nội dung có thể bổ sung file ghi âm sau.
+- **Giọng đọc**: Web Speech với giọng tiếng Việt của máy (chỉ đọc văn bản đã duyệt). Chọn giọng bằng hàm thuần `pickVoice` (`fx/speech.ts`): chỉ xét giọng có `lang` bắt đầu `vi`; `?voice=<chuỗi con tên, không phân biệt hoa thường>` ép giọng; không ép thì ưu tiên tên khớp `/google|hoai\s?my/i`, rồi giọng vi đầu tiên, rồi `null`. Không có giọng vi-VN → im lặng, phụ đề vẫn hiện. Gói nội dung có thể bổ sung file ghi âm sau.
 
 ## Bảo đảm không kẹt (soft-lock)
 
@@ -64,8 +68,8 @@ Cảnh truyện, mô phỏng thí nghiệm, phần mở/kết của mọi hoạt
 | Trẻ hoàn thành không cần đọc nhiều chữ | ✓ câu yêu cầu ≤ 7 từ + đọc to + biểu tượng |
 | Giáo viên tạm dừng/tiếp/lùi, xem câu hỏi gợi ý | ✓ (E2E kiểm tra tạm dừng bằng phím) |
 | Toàn bộ nội dung từ dữ liệu, không hard-code bài | ✓ |
-| Hai bài mẫu chơi trọn | ✓ "Quả táo bị thất lạc" (11 hoạt động) · "Nổi hay chìm?" (10 hoạt động) |
+| Sáu bài chơi trọn | ✓ `lost-apple` (11 hoạt động) · `float-or-sink` (10 hoạt động) · `red-riding-hood` · `white-black-buffalo` · `purple-cabbage` · `dancing-rice` |
 | Thêm bài mới chỉ bằng dữ liệu + asset | ✓ `npm run scaffold` → validate → chạy, không sửa engine |
 | Asset nạp từ Firebase Storage | Đã viết `FirebaseContentSource` + `publish.ts` + rules; **chưa chạy với project thật** |
 | Asset GPT Image | Hiện là vector tạm (SVG) theo art bible, kèm prompt trong `assets.json` để thay |
-| Duyệt sư phạm (cấp 3) | Hai bài đang ở `review` — cần chuyên môn mầm non duyệt |
+| Duyệt sư phạm (cấp 3) | Cả sáu bài đang ở `review` — cần chuyên môn mầm non duyệt |

@@ -22,8 +22,8 @@ Brief (JSON) ─► Claude: thiết kế giáo dục → thiết kế trò chơi
 
 ## 2. Yêu cầu cho Claude (dán kèm brief)
 
-> Soạn MỘT gói bài học cho nền tảng "Lớp Học Diệu Kỳ" trong `edu-platform/`.
-> 1. Đọc `docs/content-guide.md`, `docs/art-bible.md`, hai bài mẫu trong `content/lessons/`, và `docs/schema/lesson-package.schema.json`.
+> Soạn MỘT gói bài học cho nền tảng "Lớp Học Diệu Kỳ" trong `apps/classroom/` của repo `lop-hoc-dieu-ky`.
+> 1. Đọc `docs/content-guide.md`, `docs/art-bible.md`, các bài mẫu `lost-apple` và `float-or-sink` trong `content/lessons/`, và `docs/schema/lesson-package.schema.json`.
 > 2. Chạy `npm run scaffold -- <id> --domain <domain> --topic <topic> --title "<tên>"` rồi điền `lesson.json` + `assets.json`.
 > 3. Chỉ dùng loại hoạt động có sẵn trong engine. Thiếu tương tác thật sự → dừng, đề xuất primitive mới, không tự chế trong dữ liệu.
 > 4. Mỗi hoạt động: câu yêu cầu ≤ 7 từ, câu hỏi gợi ý cho cô, mục tiêu, ghi chú quan sát. Không phạt khi sai. Khoa học phải đúng — ghi rõ điểm cần chuyên môn kiểm.

@@ -8,7 +8,7 @@ assets.json   danh sách asset (id, file, loại, prompt GPT Image, trạng thá
 assets/       file asset (SVG tạm / PNG, WebP do GPT Image tạo)
 ```
 
-Schema đầy đủ: `docs/schema/lesson-package.schema.json` (sinh bằng `npm run schema`). Hai bài mẫu là ví dụ chuẩn nhất — đọc chúng trước.
+Schema đầy đủ: `docs/schema/lesson-package.schema.json` (sinh bằng `npm run schema`). Các bài `lost-apple` và `float-or-sink` là ví dụ chuẩn nhất — đọc chúng trước. Loại id asset: `character` · `object` · `liquid` · `background` · `icon` · `overlay` · `audio` (`liquid` trong manifest có `type` là `object`).
 
 ## Phân cấp
 
@@ -67,6 +67,8 @@ Mỗi hoạt động dựng lại cảnh từ trạng thái gốc + `sceneOverri
 | `parallel` | `steps` chạy đồng thời |
 | `play` | gọi `scenario.timelines[<tên>]` với `args`; trong mẫu dùng `"$ten"` (số giữ nguyên kiểu, dùng được làm toạ độ) |
 
+`$x` cũng dùng được ở `wait.ms` và `scale.to`/`rotate.to` trong timeline mẫu, ví dụ `{ "do": "wait", "ms": "$delay" }` và `{ "do": "rotate", "target": "…", "to": "$rot" }` (xem `dancing-rice`); `ms` là số không âm. `visual` (khung 400×300) cho phép `layers` rỗng nếu có `bg`; rỗng cả hai là lỗi.
+
 `ease`: `linear` · `easeIn` · `easeOut` · `easeInOut` · `backOut` · `backIn` · `bounceOut` · `elasticOut` · `sink` (chìm, bị nước cản) · `float` (dập dềnh rồi nổi).
 
 Âm thanh: `tap` · `pop` · `pickup` · `drop` · `correct` · `retry` · `splash` · `plunk` · `bubble` · `whoosh` · `sparkle` · `hop` · `fanfare` · `thud` · `page` · `chime`.
@@ -93,4 +95,5 @@ Trường chung: `id`, `type`, `sceneId`, `instruction` (≤ 7 từ, đọc to c
 - Không phạt khi sai: lời mời thử lại, không tín hiệu "sai".
 - Mỗi hoạt động có câu hỏi gợi ý cho giáo viên — trò chơi tạo tình huống, cô hỏi, trẻ nói.
 - Nội dung khoa học phải đúng; tránh gieo ngộ nhận (ví dụ bài nổi/chìm tránh "vật nặng thì chìm").
+- Bài `approved`/`published` phải sạch cả cảnh báo QA (câu yêu cầu > 7 từ, vùng chạm nhỏ); bài `draft`/`review` được phép còn cảnh báo.
 - Ngôn ngữ phù hợp trẻ 5 tuổi; khuyến khích trả lời cả câu.
