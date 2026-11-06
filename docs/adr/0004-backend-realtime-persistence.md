@@ -17,3 +17,11 @@ Firebase RTDB/Firestore cho realtime (không có logic authoritative nếu khôn
 
 ## Hệ quả
 Đổi thư viện realtime chỉ đụng adapter. Postgres cần nơi host (Q-04).
+
+## Kết quả spike S1 (2026-11-06) — chọn Colyseus
+Colyseus 0.18 (`colyseus` 0.18.10, `@colyseus/sdk` 0.18.6, `@colyseus/schema` 5.0.42) đủ cho room authoritative, state delta, reconnect, `maxClients`, `/health`; `ws` chỉ còn là dự phòng. Cấu hình bắt buộc rút ra từ spike:
+- Client đặt `room.reconnection.minUptime = 0` (mặc định 5000 ms làm phòng mới mở < 5 s không nối lại được).
+- Đóng tab phải `leave`/`unmount` chủ động, nếu không server giữ "người ma" 30 s.
+- `joinOrCreate` khi đầy tự mở room phụ (đúng ADR-0008) — cần luật gán instance ở M2.
+- Luật tốc độ là xô ngân sách quãng đường (trần 55 px, hồi 220 px/s), không dựa dt giữa hai message.
+Server: ~85–93 MB RSS, CPU ~4% với 19 bot, khởi động lạnh ~0,64 s.

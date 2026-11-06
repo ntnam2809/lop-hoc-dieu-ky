@@ -113,7 +113,7 @@ apps/classroom (engine     ├─ WebSocket/HTTP ─► apps/server (M2) ─┤
 | Mốc | Nội dung | Điều kiện vào |
 |---|---|---|
 | **M0** ✓ | Review, thiết kế, ADR, constitution, agent, init monorepo, lõi domain (hai không gian), migrate source | — |
-| **M1** | Spike S1: campus Phaser + room realtime, 2+ client thấy nhau, reconnect, đo trên tablet và điện thoại · port engine delta, đưa 4 bài khôi phục về build | anh Nam duyệt PR M0 |
+| **M1** ✓ | Spike S1: campus Phaser + room realtime, 2+ client thấy nhau, reconnect, đo trên tablet và điện thoại · port engine delta, đưa 4 bài khôi phục về build | anh Nam duyệt PR M0 |
 | **M2** | `apps/server`: domain qua HTTP/WS, auth người lớn, Postgres adapter, grader từ gói bài | S1 đạt tiêu chí ADR-0003 |
 | **M3 = MVP-A** (hạ tầng miễn phí, phiên ≤ 20 người — ADR-0017) | Campus trường chơi (cổng · sân · 2 phòng) + nhân vật + chuỗi nhiệm vụ + phòng học đồng bộ + chat người lớn có moderation + streamer mode · **mở cho phụ huynh, livestream quảng bá** | tài khoản host free |
 | **M4 = MVP-B** | Trường tổ chức chế độ private + hiệu trưởng phê duyệt giáo viên + thiết kế phiên học (`SessionPlan`) + trình chiếu cho lớp kèm ghi quan sát + xuất tóm tắt SKKN · pilot với một giáo viên thật. **Không có tài khoản trẻ** | Q-13, Q-16 |

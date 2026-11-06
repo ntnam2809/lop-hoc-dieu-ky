@@ -27,11 +27,13 @@ Trường học 2D trực tuyến cho việc học tương tác: người lớn 
 | Đường dẫn | Vai trò |
 |---|---|
 | `packages/domain/` | Lõi nghiệp vụ thuần TypeScript: trường, vai theo phạm vi, lớp, ghi danh, phiên học, kết quả, chat an toàn, báo cáo, kiểm toán |
-| `apps/classroom/` | Engine bài học dữ liệu hoá + ứng dụng giáo viên (Vite + TS) — source của bản chơi thử |
+| `apps/classroom/` | Engine bài học dữ liệu hoá + ứng dụng giáo viên (Vite + TS) — source của bản chơi thử, 6 bài |
+| `apps/campus/` | Campus 2D (Phaser 4) — **spike S1**: sân trường tạm, avatar đi lại, thấy nhau realtime. Không gian **người lớn**, chưa gắn danh tính; trẻ không dùng |
+| `apps/server/` | Server realtime (Colyseus 0.18): room campus authoritative, trần 20 người, `/health` cho host miễn phí — **spike S1** |
 | `index.html`, `assets/`, `.nojekyll` | Bản build đang deploy GitHub Pages — không sửa tay |
 | `docs/` · `knowledge/` · `.claude/` | Thiết kế · tri thức phân tầng · agent, skill |
 
-Chưa có (theo lộ trình): `apps/campus` (campus 2D, M1) · `apps/server` (HTTP + realtime + Postgres, M2).
+Kết quả spike S1: [`docs/spikes/S1-campus-realtime.md`](docs/spikes/S1-campus-realtime.md). Chưa có (theo lộ trình): nối `packages/domain` vào server, đăng nhập Firebase, lưu Firestore (M2).
 
 ## Chạy local
 
@@ -42,6 +44,8 @@ npm ci
 npm run check          # domain: typecheck + test · classroom: validate + typecheck + test + build
 npm run test:e2e       # Playwright chơi trọn từng bài (Chromium; trong cloud tự dùng /opt/pw-browsers/chromium)
 npm run dev:classroom  # http://localhost:5180
+npm run dev:server     # realtime campus ws://localhost:2567 (GET /health)
+npm run dev:campus     # http://localhost:5198 (?name=<tên>)
 ```
 
 Biến môi trường: `.env.example` (gốc, cho server M2) và `apps/classroom/.env.example` (nguồn nội dung, Firebase). Không file nào chứa secret; sao chép thành `.env` khi cần.

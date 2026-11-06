@@ -9,8 +9,8 @@
 |---|---|---|---|
 | [0001](adr/0001-modular-monolith-monorepo.md) | Monorepo npm workspaces, modular monolith | Accepted | platform |
 | [0002](adr/0002-preserve-prototype-deploy.md) | Giữ deploy prototype ở gốc; source về `apps/classroom` | Accepted | platform · learning |
-| [0003](adr/0003-client-engine.md) | Phaser cho campus · giữ engine bài học · không React MVP | Accepted có điều kiện (S1) | world · learning |
-| [0004](adr/0004-backend-realtime-persistence.md) | Node 22 · realtime theo room (Colyseus ứng viên) · Postgres | Accepted hướng; thư viện sau S1 | platform · world · classroom |
+| [0003](adr/0003-client-engine.md) | Phaser cho campus · giữ engine bài học · không React MVP | Accepted có điều kiện (S1 xong; chờ đo tablet thật) | world · learning |
+| [0004](adr/0004-backend-realtime-persistence.md) | Node 22 · realtime theo room (Colyseus ứng viên) · Postgres | Accepted — Colyseus 0.18 (S1); Postgres → Firestore (0017) | platform · world · classroom |
 | [0005](adr/0005-auth-child-guardian.md) | Người lớn có tài khoản · trẻ là hồ sơ được quản lý | Accepted MVP; phụ huynh chờ Q-02 | school · safety |
 | [0006](adr/0006-identity-role-model.md) | Danh tính ≠ thành viên ≠ ghi danh ≠ gói; vai có phạm vi | Accepted | school |
 | [0007](adr/0007-safety-defaults.md) | Mặc định an toàn MVP | Accepted | safety |

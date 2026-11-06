@@ -4,7 +4,7 @@ import { BUDGET_CAP, MAX_CLIENTS, RECONNECT_S, WORLD } from '../sim/constants.js
 import { sanitizeName, validateMove } from '../sim/movement.js';
 import { CampusState, Player } from './campus-state.js';
 
-const MoveMsg = z.object({ x: z.number(), y: z.number(), seq: z.number().int().nonnegative() });
+const MoveMsg = z.object({ x: z.number(), y: z.number(), seq: z.number().int().nonnegative().max(0xffffffff) }); // lastSeq là uint32 trong schema
 
 export class CampusRoom extends Room {
   maxClients = MAX_CLIENTS;
@@ -50,7 +50,7 @@ export class CampusRoom extends Room {
     p.lastSeq = 0;
     this.state.players.set(client.sessionId, p);
     this.internal.set(client.sessionId, { budget: BUDGET_CAP, t: Date.now() });
-    console.log(`[campus] join ${p.displayName} (${client.sessionId}) n=${this.state.players.size}`);
+    console.log(`[campus] join ${client.sessionId} n=${this.state.players.size}`); // log chỉ id (ADR-0013)
   }
 
   // 0.18: onDrop = mất kết nối không chủ động; onLeave = rời hẳn (kể cả hết hạn giữ chỗ).

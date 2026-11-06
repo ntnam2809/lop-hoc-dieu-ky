@@ -10,7 +10,8 @@ Trường học 2D trực tuyến: người lớn lập trường, mở lớp, d
 
 ## Mốc hiện tại
 - **M0 ✓** (HO-0012): review · thiết kế · ADR 0001–0015 · constitution · agent · monorepo · `packages/domain` (21 test, hai không gian) · `apps/classroom` (prototype source, xanh).
-- **M1 kế tiếp:** spike S1 (campus Phaser + room realtime, đo tablet) · port engine delta để 4 bài khôi phục vào build.
+- **M1 ✓:** spike S1 (`apps/campus` Phaser 4 + `apps/server` Colyseus 0.18, e2e 9 ca, số đo ở `docs/spikes/S1-campus-realtime.md`) · engine delta đã port, 6 bài trong build.
+- **M2 kế tiếp:** nối `packages/domain` vào server, Firebase Auth + Firestore, `SessionPlan`, Grader, luật gán instance.
 - Sau đó: M2 server + Postgres · **M3 = MVP-A** (người lớn, RPG, streamer mode) · **M4 = MVP-B** (tổ chức + trẻ).
 
 ## Bản đồ code
@@ -19,8 +20,8 @@ Trường học 2D trực tuyến: người lớn lập trường, mở lớp, d
 |---|---|---|
 | `packages/domain/` | school · classroom · safety (luật) | có code + test |
 | `apps/classroom/` | learning | có code + test (prototype) |
-| `apps/campus/` | world | chưa tạo (M1) |
-| `apps/server/` | platform · classroom · world | chưa tạo (M2) |
+| `apps/campus/` | world | spike S1 (có code + test + e2e) |
+| `apps/server/` | platform · classroom · world | spike S1: room campus (chưa nối domain) |
 | `index.html`, `assets/` (gốc) | — | bản deploy Pages, **không đụng** (ADR-0002) |
 
 ## Giao việc nhanh
