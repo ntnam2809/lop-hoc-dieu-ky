@@ -32,6 +32,7 @@ Engine/primitive bài học (→ learning) · campus/di chuyển (→ world) · 
 M0 ✓ ở lõi domain. Chưa có transport, chưa đồng bộ engine.
 
 ## Việc kế tiếp
+- M2 (ADR-0016): `SessionPlan` (giáo viên thiết kế phiên: bài, thứ tự hoạt động, ghi chú, câu hỏi gợi ý; private theo trường) · phiên chế độ `presented` (trình chiếu cho lớp, không có người tham gia là trẻ, giáo viên ghi quan sát) · xuất tóm tắt SKKN (M4, Q-16).
 - M2: room phiên học (state, reconnect: học sinh vào lại thấy hoạt động hiện tại), resolve báo cáo, giáo viên tắt chat từng học sinh.
 - M3: bảng giáo viên (ai đang làm/đã nộp/cần giúp), panel chat livestream, nối `Player` của engine với `session.state`.
 

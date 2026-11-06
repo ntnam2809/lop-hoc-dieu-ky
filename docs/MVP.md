@@ -4,7 +4,7 @@
 
 ## 1. Mục tiêu
 - **MVP-A (M3), người lớn:** phụ huynh vào chơi được một ngôi trường 2D nhiều người, nhập vai đủ vòng đời *lập trường → hiệu trưởng → cấp giáo viên → mở lớp → học sinh → phiên học → kết quả*. Có giải trí, hiểu cơ chế con sẽ dùng, và livestream TikTok quảng bá được.
-- **MVP-B (M4), trẻ:** một tổ chức có thật (trường mầm non) được xác minh; giáo viên thật tạo hồ sơ trẻ và dẫn phiên học trên tablet tại lớp. Trẻ không là chủ tài khoản.
+- **MVP-B (M4), giáo viên thật (vẫn là không gian người lớn, ADR-0016):** giáo viên, ví dụ đang làm SKKN, thiết kế phiên học cho trẻ, chạy thử với đồng nghiệp, rồi trình chiếu cho lớp thật trên màn hình lớn. Hiệu trưởng trường thật phê duyệt giáo viên dùng chế độ private. Trẻ không có tài khoản, không có hồ sơ.
 
 ## 2. Trong phạm vi
 
@@ -32,7 +32,16 @@
 8. Thử vào trường tổ chức khi đang bật streamer mode thì bị chặn. *(M3)*
 9. Trường chơi không tạo được hồ sơ trẻ. ✓
 
-### B — Trẻ qua tổ chức thật (`journey.test.ts` › Hành trình B ✓ ở domain)
+### B — Giáo viên thật, chế độ private (ADR-0016)
+1. Hiệu trưởng trường thật lập trường dạng tổ chức (private); nền tảng xác nhận hiệu trưởng (Q-13). ✓ domain
+2. Hiệu trưởng phê duyệt giáo viên. ✓ domain
+3. Giáo viên thiết kế phiên học: chọn bài, thứ tự hoạt động, ghi chú, câu hỏi gợi ý (`SessionPlan`). *(M2)*
+4. Giáo viên chạy thử phiên với đồng nghiệp người lớn (phiên bình thường). ✓ domain
+5. Giáo viên trình chiếu phiên cho lớp thật trên màn hình lớn, ghi quan sát lớp; không có tài khoản trẻ. *(M4)*
+6. Xuất bản tóm tắt phiên cho SKKN, không có tên trẻ (Q-16). *(M4)*
+7. Trường không hiện ở đâu, không nhận người lạ, không livestream. ✓ domain (người lớn không vào bằng mã) · M3 (chặn streamer mode)
+
+### B+ — Phase sau: hồ sơ trẻ trên thiết bị của tổ chức (`journey.test.ts` › Hành trình B ✓ ở domain, chưa bật, chờ Q-02)
 
 | # | Bước | Kiểm |
 |---|---|---|

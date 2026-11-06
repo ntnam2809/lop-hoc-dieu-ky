@@ -8,6 +8,7 @@ Nguồn: prompt gốc ([`00-ORIGINAL-USER-PROMPT.md`](00-ORIGINAL-USER-PROMPT.md
 1. **MVP có hai mục đích.** (a) Kéo **phụ huynh** trước bằng gameplay RPG: người lớn chơi được, giải trí được, hiểu cơ chế trước khi cho con tham gia. (b) **Trẻ tham gia qua một tổ chức có thật bên ngoài**, do giáo viên thật quản lý.
 2. **Người lớn livestream TikTok** để quảng bá sản phẩm.
 3. **Trẻ mẫu giáo không là chủ tài khoản.**
+4. **MVP-B vẫn là không gian người lớn** (ADR-0016): giáo viên thật, ví dụ đang làm SKKN, chủ động **thiết kế phiên học cho trẻ**, chạy thử với người lớn, rồi trình chiếu cho lớp thật. Hiệu trưởng trường thật phê duyệt giáo viên dùng app ở **chế độ private** để quản lý riêng. Trẻ không có tài khoản ở MVP-B.
 
 Cách hiện thực: hai không gian tách hẳn nhau (ADR-0014). Trường **chơi** (`play`) chỉ có người lớn, là nơi có RPG và được livestream. Trường **tổ chức** (`organization`) phải qua xác minh, là nơi duy nhất có trẻ, không livestream (ADR-0015). Cùng một vòng đời trường → lớp → phiên học chạy ở cả hai không gian. Nhờ vậy, phụ huynh chơi bên trường chơi chính là đang "học cơ chế" mà con sẽ dùng.
 
@@ -115,5 +116,6 @@ apps/classroom (engine     ├─ WebSocket/HTTP ─► apps/server (M2) ─┤
 | **M1** | Spike S1: campus Phaser + room realtime, 2+ client thấy nhau, reconnect, đo trên tablet và điện thoại · port engine delta, đưa 4 bài khôi phục về build | anh Nam duyệt PR M0 |
 | **M2** | `apps/server`: domain qua HTTP/WS, auth người lớn, Postgres adapter, grader từ gói bài | S1 đạt tiêu chí ADR-0003 |
 | **M3 = MVP-A** | Campus trường chơi (cổng · sân · 2 phòng) + nhân vật + chuỗi nhiệm vụ + phòng học đồng bộ + chat người lớn có moderation + streamer mode · **mở cho phụ huynh, livestream quảng bá** | Q-04, Q-12 |
-| **M4 = MVP-B** | Xác minh tổ chức + hồ sơ trẻ + lớp có trẻ chạy trên tablet tại tổ chức · rà soát an toàn/riêng tư · pilot với một tổ chức thật | Q-02, Q-13 |
+| **M4 = MVP-B** | Trường tổ chức chế độ private + hiệu trưởng phê duyệt giáo viên + thiết kế phiên học (`SessionPlan`) + trình chiếu cho lớp kèm ghi quan sát + xuất tóm tắt SKKN · pilot với một giáo viên thật. **Không có tài khoản trẻ** | Q-13, Q-16 |
+| Phase sau | Hồ sơ trẻ trên thiết bị của tổ chức | Q-02 |
 | Phase 1–4 | Social alpha → Learning beta → Creator & gói trả phí → Cộng đồng (mỗi phase một review) | sau pilot |

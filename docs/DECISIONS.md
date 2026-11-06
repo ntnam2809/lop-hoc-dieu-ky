@@ -22,6 +22,7 @@
 | [0013](adr/0013-observability.md) | Quan sát không thu dữ liệu cá nhân trẻ | Proposed (M2) | platform · safety |
 | [0014](adr/0014-two-spaces-adult-first.md) | Hai không gian: trường chơi người lớn ↔ tổ chức có thật cho trẻ | Accepted (phương châm 2026-11-06) | school · safety · world |
 | [0015](adr/0015-livestream-streamer-mode.md) | Livestream TikTok bởi người lớn, streamer mode | Accepted hướng; API TikTok LATER | world · classroom · safety |
+| [0016](adr/0016-mvp-b-teacher-private-mode.md) | MVP-B: giáo viên thiết kế phiên học cho trẻ ở chế độ private, hiệu trưởng thật phê duyệt; trẻ không có tài khoản | Accepted (phương châm 2026-11-06) | school · classroom · learning · safety |
 
 ## Giả định đang dùng (đổi được khi anh Nam trả lời)
 
@@ -41,7 +42,7 @@
 | Id | Câu hỏi | Blocker? | Đề xuất của em |
 |---|---|---|---|
 | Q-01 | ✓ **Đã trả lời 2026-11-06:** phụ huynh chơi trước bằng RPG; trẻ tham gia qua tổ chức có thật do giáo viên thật quản lý; trẻ mẫu giáo không là chủ tài khoản → ADR-0014 | — | — |
-| Q-02 | Còn lại sau phương châm: tổ chức lấy đồng ý của phụ huynh thế nào (giấy tờ của trường hay trong app), ai chịu trách nhiệm dữ liệu trẻ (tổ chức hay nền tảng), lưu/xoá ra sao, thị trường phát hành, có ai tư vấn pháp lý | **Chặn MVP-B** (M4); không chặn MVP-A | Hợp đồng với tổ chức: tổ chức giữ đồng ý của phụ huynh, nền tảng xử lý dữ liệu theo hợp đồng — cần luật sư xác nhận |
+| Q-02 | Còn lại sau phương châm: tổ chức lấy đồng ý của phụ huynh thế nào (giấy tờ của trường hay trong app), ai chịu trách nhiệm dữ liệu trẻ (tổ chức hay nền tảng), lưu/xoá ra sao, thị trường phát hành, có ai tư vấn pháp lý | Chặn phase **có hồ sơ trẻ**; không chặn MVP-A, không chặn MVP-B (ADR-0016: MVP-B không có dữ liệu trẻ) | Hợp đồng với tổ chức: tổ chức giữ đồng ý của phụ huynh, nền tảng xử lý dữ liệu theo hợp đồng — cần luật sư xác nhận |
 | Q-03 | Bậc gói, quota, giá; School Pro có gồm Teacher Pro không | Không (placeholder) | Chờ có số liệu chi phí từ staging |
 | Q-04 | Nhà cung cấp hosting server + Postgres, ngân sách tháng, ai giữ tài khoản | Chặn staging online (M3) | Một container nhỏ + Postgres managed, vùng gần Việt Nam |
 | Q-05 | Chuyển nhượng chủ trường, phó hiệu trưởng, trợ giảng, đóng trường thì dữ liệu đi đâu | Không | LATER |
@@ -51,7 +52,8 @@
 | Q-09 | Đóng băng `neutrino-verse-studio/edu-platform/` (source cũ) sau khi PR này merge? Talia thêm repo này vào router (`tools/router.py` REPOS) + bí danh `@edu`? | Không | Có cho cả hai — tránh hai nơi chứa source |
 | Q-10 | Duyệt port engine delta để đưa 4 bài khôi phục trở lại build (M1)? | Không | Có — trước khi cutover deploy |
 | Q-11 | Repo đang public (Pages)? Tài liệu thiết kế công khai có ổn không? | Không | Ổn nếu không có dữ liệu thật; tách repo private khi có dữ liệu người dùng |
-| Q-12 | Vòng chơi RPG cho người lớn: khung ở `DESIGN.md` §8 (nhập vai vòng đời trường, chuỗi nhiệm vụ, EXP, trang phục, "nhìn như con") có đúng hướng anh muốn không? Có cần minigame giải trí riêng ngoài bài học không? | Chặn thiết kế chi tiết M3 | Duyệt khung; em soạn bản nhiệm vụ đầu tiên ở M3 |
-| Q-13 | Xác minh tổ chức có thật: cần giấy tờ gì, ai duyệt, có hợp đồng không | **Chặn MVP-B** | Duyệt tay bởi đội vận hành + hợp đồng thử nghiệm với tổ chức đầu tiên |
+| Q-12 | ✓ **Đã trả lời 2026-11-06:** khung RPG ở `DESIGN.md` §8 được duyệt. Minigame riêng: chưa quyết, xét khi soạn nhiệm vụ M3 | — | — |
+| Q-13 | Đã rõ một phần (ADR-0016): hiệu trưởng trường thật phê duyệt giáo viên. Còn lại: nền tảng xác nhận hiệu trưởng là người của trường thật bằng cách nào (email trường, giấy giới thiệu…) | Chặn MVP-B (M4) | Duyệt tay hiệu trưởng của tổ chức đầu tiên |
+| Q-16 | Bản tóm tắt phiên cho SKKN cần những mục gì (mẫu của Sở/Phòng GD?), xuất dạng gì (PDF, Word, in) | Không (M4) | Em soạn mẫu đầu từ dữ liệu phiên, anh hoặc giáo viên thật góp ý |
 | Q-14 | Livestream: tài khoản TikTok chính thức, ai phát, kịch bản, có cần đưa bình luận TikTok vào game không | Không chặn code; chặn kế hoạch quảng bá | Phát bằng streamer mode ở campus trải nghiệm; tích hợp bình luận để sau |
 | Q-15 | Phụ huynh đã chơi ở trường chơi có được liên kết với hồ sơ con trong tổ chức (xem tiến độ) không | Không (Phase 2) | Có, nhưng chỉ khi tổ chức xác nhận liên kết; phụ huynh không vào lớp có trẻ |

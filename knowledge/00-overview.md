@@ -5,7 +5,7 @@ Trường học 2D trực tuyến: người lớn lập trường, mở lớp, d
 
 ## Phương châm (anh Nam, 2026-11-06)
 - **MVP-A:** phụ huynh chơi trước ở **trường chơi** (`play`, chỉ người lớn): RPG, hiểu cơ chế, livestream TikTok bằng streamer mode.
-- **MVP-B:** trẻ chỉ tham gia qua **tổ chức có thật đã xác minh** (`organization`), giáo viên thật quản lý. Không livestream ở đây.
+- **MVP-B (ADR-0016):** vẫn là không gian người lớn. Giáo viên thật (vd làm SKKN) **thiết kế phiên học cho trẻ**, chạy thử với người lớn, trình chiếu cho lớp thật. Hiệu trưởng trường thật phê duyệt giáo viên dùng **chế độ private** (`organization`). Trẻ không có tài khoản ở MVP-B. Không livestream ở đây.
 - Trẻ mẫu giáo **không là chủ tài khoản**. Hai không gian tách hẳn (ADR-0014, ADR-0015).
 
 ## Mốc hiện tại
@@ -36,8 +36,8 @@ Trường học 2D trực tuyến: người lớn lập trường, mở lớp, d
 | Chạm ≥ 2 module | mỗi lead một phần; manager ghép thứ tự theo hợp đồng |
 
 ## Đang chờ anh Nam (blocker)
-- **Q-02** đồng ý phụ huynh/trách nhiệm dữ liệu · **Q-13** xác minh tổ chức → chặn MVP-B.
-- **Q-04** hosting/ngân sách · **Q-12** vòng chơi RPG người lớn → chặn MVP-A (M3).
+- **Q-13** xác nhận hiệu trưởng thật · **Q-16** mẫu tóm tắt SKKN → MVP-B. **Q-02** chỉ chặn phase có hồ sơ trẻ.
+- **Q-04** hosting/ngân sách → chặn staging MVP-A (M3). Q-12 ✓ khung RPG đã duyệt.
 - Danh sách đủ: `docs/DECISIONS.md` › Câu hỏi chủ dự án.
 
 ## Lệnh
