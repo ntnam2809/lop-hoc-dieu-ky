@@ -66,6 +66,8 @@ async function runStep(step: Step, ctx: TimelineContext, args: TemplateArgs): Pr
       const target = e.def.scale ?? 1;
       e.hidden = false;
       if (step.effect === 'fade') {
+        e.opacity = 0;
+        e.apply();
         await tween({ duration: 450, ease: 'easeOut', signal, onUpdate: (k) => { e.opacity = k; e.apply(); } });
       } else if (step.effect === 'grow') {
         await tween({ duration: 650, ease: 'easeOut', signal, onUpdate: (k) => { e.scale = target * k; e.apply(); } });
@@ -115,7 +117,7 @@ async function runStep(step: Step, ctx: TimelineContext, args: TemplateArgs): Pr
       return;
     }
     case 'wait':
-      await wait(step.ms, signal);
+      await wait(Number(step.ms), signal);
       return;
     case 'sound':
       sound.play(step.sound);
@@ -131,14 +133,16 @@ async function runStep(step: Step, ctx: TimelineContext, args: TemplateArgs): Pr
       const e = ent(step.target);
       if (!e) return;
       const s0 = e.scale;
-      await tween({ duration: step.duration ?? 500, ease: step.ease ?? 'backOut', signal, onUpdate: (k) => { e.scale = lerp(s0, step.to, k); e.apply(); } });
+      const to = Number(step.to);
+      await tween({ duration: step.duration ?? 500, ease: step.ease ?? 'backOut', signal, onUpdate: (k) => { e.scale = lerp(s0, to, k); e.apply(); } });
       return;
     }
     case 'rotate': {
       const e = ent(step.target);
       if (!e) return;
       const r0 = e.rot;
-      await tween({ duration: step.duration ?? 500, ease: step.ease ?? 'easeInOut', signal, onUpdate: (k) => { e.rot = lerp(r0, step.to, k); e.apply(); } });
+      const to = Number(step.to);
+      await tween({ duration: step.duration ?? 500, ease: step.ease ?? 'easeInOut', signal, onUpdate: (k) => { e.rot = lerp(r0, to, k); e.apply(); } });
       return;
     }
     case 'camera': {

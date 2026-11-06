@@ -191,6 +191,20 @@
       "order": 1,
       "contentVersion": "1.0.0",
       "status": "review"
+    },
+    {
+      "id": "kitchen-magic",
+      "domainId": "science",
+      "name": "Phép màu trong bếp",
+      "description": "Đổi màu, nổi bong bóng — thí nghiệm an toàn với bắp cải tím, chanh, giấm, bột nở và hạt gạo.",
+      "learningObjectives": [
+        "Dự đoán trước khi thử",
+        "Quan sát và mô tả sự thay đổi",
+        "So sánh kết quả giữa các cốc"
+      ],
+      "order": 2,
+      "contentVersion": "1.0.0",
+      "status": "review"
     }
   ]
 }

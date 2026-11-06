@@ -62,14 +62,10 @@
             "type": "object",
             "properties": {
               "bg": {
-                "type": "string"
+                "$ref": "#/$defs/__schema1"
               },
               "layers": {
-                "minItems": 1,
-                "type": "array",
-                "items": {
-                  "$ref": "#/$defs/__schema1"
-                }
+                "$ref": "#/$defs/__schema2"
               }
             },
             "required": [
@@ -84,10 +80,10 @@
             }
           },
           "contentVersion": {
-            "$ref": "#/$defs/__schema2"
+            "$ref": "#/$defs/__schema3"
           },
           "status": {
-            "$ref": "#/$defs/__schema3"
+            "$ref": "#/$defs/__schema4"
           }
         },
         "required": [
@@ -131,10 +127,10 @@
             "type": "number"
           },
           "contentVersion": {
-            "$ref": "#/$defs/__schema2"
+            "$ref": "#/$defs/__schema3"
           },
           "status": {
-            "$ref": "#/$defs/__schema3"
+            "$ref": "#/$defs/__schema4"
           }
         },
         "required": [
@@ -162,80 +158,86 @@
       "pattern": "^[a-z0-9][a-z0-9-_]*$"
     },
     "__schema1": {
-      "type": "object",
-      "properties": {
-        "asset": {
-          "type": "string"
-        },
-        "x": {
-          "type": "number"
-        },
-        "y": {
-          "type": "number"
-        },
-        "w": {
-          "type": "number",
-          "exclusiveMinimum": 0
-        },
-        "h": {
-          "type": "number",
-          "exclusiveMinimum": 0
-        },
-        "flip": {
-          "type": "boolean"
-        },
-        "rotate": {
-          "type": "number"
-        },
-        "anim": {
-          "type": "string",
-          "enum": [
-            "none",
-            "idle",
-            "hop",
-            "walk",
-            "run",
-            "sleep",
-            "cry",
-            "cheer",
-            "wiggle",
-            "bob",
-            "sway",
-            "spin",
-            "pulse",
-            "shake",
-            "think",
-            "peek"
-          ]
-        },
-        "emote": {
-          "type": "string",
-          "enum": [
-            "heart",
-            "question",
-            "exclaim",
-            "tear",
-            "zzz",
-            "sparkle",
-            "music",
-            "idea"
-          ]
-        }
-      },
-      "required": [
-        "asset",
-        "x",
-        "y",
-        "w",
-        "h"
-      ],
-      "additionalProperties": false
+      "type": "string"
     },
     "__schema2": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "w": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "h": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "flip": {
+            "type": "boolean"
+          },
+          "rotate": {
+            "type": "number"
+          },
+          "anim": {
+            "type": "string",
+            "enum": [
+              "none",
+              "idle",
+              "hop",
+              "walk",
+              "run",
+              "sleep",
+              "cry",
+              "cheer",
+              "wiggle",
+              "bob",
+              "sway",
+              "spin",
+              "pulse",
+              "shake",
+              "think",
+              "peek"
+            ]
+          },
+          "emote": {
+            "type": "string",
+            "enum": [
+              "heart",
+              "question",
+              "exclaim",
+              "tear",
+              "zzz",
+              "sparkle",
+              "music",
+              "idea"
+            ]
+          }
+        },
+        "required": [
+          "asset",
+          "x",
+          "y",
+          "w",
+          "h"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "__schema3": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+$"
     },
-    "__schema3": {
+    "__schema4": {
       "type": "string",
       "enum": [
         "draft",

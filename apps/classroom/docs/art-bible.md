@@ -20,7 +20,7 @@ Bảng màu tham chiếu: trời `#9EDBFF` · cỏ `#8CCB6A` · nước `#4DB3EC
 
 ## Đặt tên & quản lý
 
-`{domain}_{topic}_{assetType}_{name}_{vNN}` — ví dụ `language_story_character_rabbit_v01`. Loại: `character` · `object` · `background` · `icon` · `overlay` · `audio`.
+`{domain}_{topic}_{assetType}_{name}_{vNN}` — ví dụ `language_story_character_rabbit_v01`. Loại: `character` · `object` · `background` · `icon` · `overlay` · `audio`. Chất lỏng đặt tên với loại `liquid` (vd `science_cabbage_liquid_purple_v01`); trong manifest `type` vẫn là `object`.
 
 Trong `assets.json`, mỗi asset có `prompt` (mô tả chủ thể) và `status`: `placeholder` (vector tạm) → `generated` (GPT Image, chưa duyệt) → `approved`. Thay ảnh = tăng version (`_v02`), cập nhật `file`, giữ nguyên `id` cũ trong các bài đã xuất bản hoặc cập nhật tham chiếu.
 

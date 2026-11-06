@@ -24,8 +24,8 @@ export const visualSchema = z.object({
     asset: z.string(),
     x: z.number(), y: z.number(), w: z.number().positive(), h: z.number().positive(),
     flip: z.boolean().optional(), rotate: z.number().optional(), anim: anim.optional(), emote: emote.optional(),
-  }).strict()).min(1),
-}).strict();
+  }).strict()),
+}).strict().refine((v) => v.layers.length > 0 || !!v.bg, { message: 'Visual rỗng: cần ít nhất một layer hoặc bg' });
 
 const entityObject = z.object({
   id,
@@ -58,11 +58,11 @@ export const stepSchema: z.ZodType = z.lazy(() => z.discriminatedUnion('do', [
   z.object({ do: z.literal('emote'), target, emote, duration: z.number().optional() }).strict(),
   z.object({ do: z.literal('fx'), fx: z.enum(FX_KINDS as [string, ...string[]]), at: z.union([point, z.string()]), size: z.number().optional(), offset: point.optional() }).strict(),
   z.object({ do: z.literal('say'), text: z.string().min(1), target: target.optional(), hold: z.number().optional() }).strict(),
-  z.object({ do: z.literal('wait'), ms: z.number().nonnegative() }).strict(),
+  z.object({ do: z.literal('wait'), ms: z.union([z.number().nonnegative(), param]) }).strict(),
   z.object({ do: z.literal('sound'), sound: z.enum(SOUND_NAMES as [string, ...string[]]) }).strict(),
   z.object({ do: z.literal('flip'), target, value: z.boolean() }).strict(),
-  z.object({ do: z.literal('scale'), target, to: z.number(), duration: z.number().optional(), ease: ease.optional() }).strict(),
-  z.object({ do: z.literal('rotate'), target, to: z.number(), duration: z.number().optional(), ease: ease.optional() }).strict(),
+  z.object({ do: z.literal('scale'), target, to: coord, duration: z.number().optional(), ease: ease.optional() }).strict(),
+  z.object({ do: z.literal('rotate'), target, to: coord, duration: z.number().optional(), ease: ease.optional() }).strict(),
   z.object({ do: z.literal('camera'), zoom: z.number().min(1).max(3), focus: z.union([point, z.string()]).optional(), duration: z.number().optional(), ease: ease.optional() }).strict(),
   z.object({ do: z.literal('parallel'), steps: z.array(stepSchema) }).strict(),
   z.object({ do: z.literal('play'), timeline: z.string(), args: z.record(z.string(), z.union([z.string(), z.number()])).optional() }).strict(),
@@ -146,7 +146,7 @@ export const packageSchema = z.object({
 
 export const assetManifestSchema = z.object({
   assets: z.array(z.object({
-    id: z.string().regex(/^[a-z]+_[a-z0-9-]+_(character|object|background|icon|overlay|audio)_[a-z0-9-]+_v\d{2}$/, 'tên asset theo {domain}_{topic}_{type}_{name}_{vNN}'),
+    id: z.string().regex(/^[a-z]+_[a-z0-9-]+_(character|object|liquid|background|icon|overlay|audio)_[a-z0-9-]+_v\d{2}$/, 'tên asset theo {domain}_{topic}_{type}_{name}_{vNN}'),
     type: z.enum(['character', 'object', 'background', 'icon', 'overlay', 'audio']),
     file: z.string().optional(),
     src: z.string().optional(),

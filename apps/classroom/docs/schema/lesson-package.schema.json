@@ -152,7 +152,7 @@
       "minItems": 1,
       "type": "array",
       "items": {
-        "$ref": "#/$defs/__schema8"
+        "$ref": "#/$defs/__schema9"
       }
     }
   },
@@ -193,14 +193,10 @@
       "type": "object",
       "properties": {
         "bg": {
-          "type": "string"
+          "$ref": "#/$defs/__schema5"
         },
         "layers": {
-          "minItems": 1,
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/__schema5"
-          }
+          "$ref": "#/$defs/__schema6"
         }
       },
       "required": [
@@ -209,48 +205,54 @@
       "additionalProperties": false
     },
     "__schema5": {
-      "type": "object",
-      "properties": {
-        "asset": {
-          "type": "string"
-        },
-        "x": {
-          "type": "number"
-        },
-        "y": {
-          "type": "number"
-        },
-        "w": {
-          "type": "number",
-          "exclusiveMinimum": 0
-        },
-        "h": {
-          "type": "number",
-          "exclusiveMinimum": 0
-        },
-        "flip": {
-          "type": "boolean"
-        },
-        "rotate": {
-          "type": "number"
-        },
-        "anim": {
-          "$ref": "#/$defs/__schema6"
-        },
-        "emote": {
-          "$ref": "#/$defs/__schema7"
-        }
-      },
-      "required": [
-        "asset",
-        "x",
-        "y",
-        "w",
-        "h"
-      ],
-      "additionalProperties": false
+      "type": "string"
     },
     "__schema6": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "w": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "h": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "flip": {
+            "type": "boolean"
+          },
+          "rotate": {
+            "type": "number"
+          },
+          "anim": {
+            "$ref": "#/$defs/__schema7"
+          },
+          "emote": {
+            "$ref": "#/$defs/__schema8"
+          }
+        },
+        "required": [
+          "asset",
+          "x",
+          "y",
+          "w",
+          "h"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "__schema7": {
       "type": "string",
       "enum": [
         "none",
@@ -271,7 +273,7 @@
         "peek"
       ]
     },
-    "__schema7": {
+    "__schema8": {
       "type": "string",
       "enum": [
         "heart",
@@ -284,7 +286,7 @@
         "idea"
       ]
     },
-    "__schema8": {
+    "__schema9": {
       "type": "object",
       "properties": {
         "id": {
@@ -297,7 +299,7 @@
           "minItems": 1,
           "type": "array",
           "items": {
-            "$ref": "#/$defs/__schema9"
+            "$ref": "#/$defs/__schema10"
           }
         },
         "timelines": {
@@ -306,14 +308,14 @@
             "type": "string"
           },
           "additionalProperties": {
-            "$ref": "#/$defs/__schema24"
+            "$ref": "#/$defs/__schema25"
           }
         },
         "activities": {
           "minItems": 1,
           "type": "array",
           "items": {
-            "$ref": "#/$defs/__schema30"
+            "$ref": "#/$defs/__schema32"
           }
         }
       },
@@ -325,7 +327,7 @@
       ],
       "additionalProperties": false
     },
-    "__schema9": {
+    "__schema10": {
       "type": "object",
       "properties": {
         "id": {
@@ -412,46 +414,46 @@
                 "$ref": "#/$defs/__schema0"
               },
               "asset": {
-                "$ref": "#/$defs/__schema10"
-              },
-              "x": {
                 "$ref": "#/$defs/__schema11"
               },
-              "y": {
+              "x": {
                 "$ref": "#/$defs/__schema12"
               },
-              "w": {
+              "y": {
                 "$ref": "#/$defs/__schema13"
               },
-              "h": {
+              "w": {
                 "$ref": "#/$defs/__schema14"
               },
-              "z": {
+              "h": {
                 "$ref": "#/$defs/__schema15"
               },
-              "flip": {
+              "z": {
                 "$ref": "#/$defs/__schema16"
               },
-              "rotate": {
+              "flip": {
                 "$ref": "#/$defs/__schema17"
               },
-              "scale": {
+              "rotate": {
                 "$ref": "#/$defs/__schema18"
               },
-              "anim": {
+              "scale": {
                 "$ref": "#/$defs/__schema19"
               },
-              "hidden": {
+              "anim": {
                 "$ref": "#/$defs/__schema20"
               },
-              "label": {
+              "hidden": {
                 "$ref": "#/$defs/__schema21"
               },
-              "zone": {
+              "label": {
                 "$ref": "#/$defs/__schema22"
               },
-              "decor": {
+              "zone": {
                 "$ref": "#/$defs/__schema23"
+              },
+              "decor": {
+                "$ref": "#/$defs/__schema24"
               }
             },
             "required": [
@@ -472,58 +474,58 @@
       ],
       "additionalProperties": false
     },
-    "__schema10": {
-      "type": "string"
-    },
     "__schema11": {
-      "type": "number"
+      "type": "string"
     },
     "__schema12": {
       "type": "number"
     },
     "__schema13": {
-      "type": "number",
-      "exclusiveMinimum": 0
+      "type": "number"
     },
     "__schema14": {
       "type": "number",
       "exclusiveMinimum": 0
     },
     "__schema15": {
-      "type": "number"
-    },
-    "__schema16": {
-      "type": "boolean"
-    },
-    "__schema17": {
-      "type": "number"
-    },
-    "__schema18": {
       "type": "number",
       "exclusiveMinimum": 0
     },
+    "__schema16": {
+      "type": "number"
+    },
+    "__schema17": {
+      "type": "boolean"
+    },
+    "__schema18": {
+      "type": "number"
+    },
     "__schema19": {
-      "$ref": "#/$defs/__schema6"
+      "type": "number",
+      "exclusiveMinimum": 0
     },
     "__schema20": {
-      "type": "boolean"
+      "$ref": "#/$defs/__schema7"
     },
     "__schema21": {
-      "type": "string"
+      "type": "boolean"
     },
     "__schema22": {
-      "type": "boolean"
+      "type": "string"
     },
     "__schema23": {
       "type": "boolean"
     },
     "__schema24": {
-      "type": "array",
-      "items": {
-        "$ref": "#/$defs/__schema25"
-      }
+      "type": "boolean"
     },
     "__schema25": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/__schema26"
+      }
+    },
+    "__schema26": {
       "oneOf": [
         {
           "type": "object",
@@ -533,12 +535,12 @@
               "const": "move"
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "to": {
               "anyOf": [
                 {
-                  "$ref": "#/$defs/__schema27"
+                  "$ref": "#/$defs/__schema28"
                 },
                 {
                   "type": "string"
@@ -549,13 +551,13 @@
               "type": "number"
             },
             "ease": {
-              "$ref": "#/$defs/__schema29"
+              "$ref": "#/$defs/__schema31"
             },
             "arc": {
               "type": "number"
             },
             "offset": {
-              "$ref": "#/$defs/__schema27"
+              "$ref": "#/$defs/__schema28"
             }
           },
           "required": [
@@ -573,7 +575,7 @@
               "const": "show"
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "effect": {
               "type": "string",
@@ -598,7 +600,7 @@
               "const": "hide"
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "effect": {
               "type": "string",
@@ -623,10 +625,10 @@
               "const": "anim"
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "preset": {
-              "$ref": "#/$defs/__schema6"
+              "$ref": "#/$defs/__schema7"
             }
           },
           "required": [
@@ -644,10 +646,10 @@
               "const": "emote"
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "emote": {
-              "$ref": "#/$defs/__schema7"
+              "$ref": "#/$defs/__schema8"
             },
             "duration": {
               "type": "number"
@@ -685,7 +687,7 @@
             "at": {
               "anyOf": [
                 {
-                  "$ref": "#/$defs/__schema27"
+                  "$ref": "#/$defs/__schema28"
                 },
                 {
                   "type": "string"
@@ -696,7 +698,7 @@
               "type": "number"
             },
             "offset": {
-              "$ref": "#/$defs/__schema27"
+              "$ref": "#/$defs/__schema28"
             }
           },
           "required": [
@@ -718,7 +720,7 @@
               "minLength": 1
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "hold": {
               "type": "number"
@@ -738,8 +740,15 @@
               "const": "wait"
             },
             "ms": {
-              "type": "number",
-              "minimum": 0
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "$ref": "#/$defs/__schema30"
+                }
+              ]
             }
           },
           "required": [
@@ -791,7 +800,7 @@
               "const": "flip"
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "value": {
               "type": "boolean"
@@ -812,16 +821,16 @@
               "const": "scale"
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "to": {
-              "type": "number"
+              "$ref": "#/$defs/__schema29"
             },
             "duration": {
               "type": "number"
             },
             "ease": {
-              "$ref": "#/$defs/__schema29"
+              "$ref": "#/$defs/__schema31"
             }
           },
           "required": [
@@ -839,16 +848,16 @@
               "const": "rotate"
             },
             "target": {
-              "$ref": "#/$defs/__schema26"
+              "$ref": "#/$defs/__schema27"
             },
             "to": {
-              "type": "number"
+              "$ref": "#/$defs/__schema29"
             },
             "duration": {
               "type": "number"
             },
             "ease": {
-              "$ref": "#/$defs/__schema29"
+              "$ref": "#/$defs/__schema31"
             }
           },
           "required": [
@@ -873,7 +882,7 @@
             "focus": {
               "anyOf": [
                 {
-                  "$ref": "#/$defs/__schema27"
+                  "$ref": "#/$defs/__schema28"
                 },
                 {
                   "type": "string"
@@ -884,7 +893,7 @@
               "type": "number"
             },
             "ease": {
-              "$ref": "#/$defs/__schema29"
+              "$ref": "#/$defs/__schema31"
             }
           },
           "required": [
@@ -903,7 +912,7 @@
             "steps": {
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema25"
+                "$ref": "#/$defs/__schema26"
               }
             }
           },
@@ -944,17 +953,17 @@
         }
       ]
     },
-    "__schema26": {
+    "__schema27": {
       "type": "string"
     },
-    "__schema27": {
+    "__schema28": {
       "type": "object",
       "properties": {
         "x": {
-          "$ref": "#/$defs/__schema28"
+          "$ref": "#/$defs/__schema29"
         },
         "y": {
-          "$ref": "#/$defs/__schema28"
+          "$ref": "#/$defs/__schema29"
         }
       },
       "required": [
@@ -963,18 +972,21 @@
       ],
       "additionalProperties": false
     },
-    "__schema28": {
+    "__schema29": {
       "anyOf": [
         {
           "type": "number"
         },
         {
-          "type": "string",
-          "pattern": "^\\$\\w+$"
+          "$ref": "#/$defs/__schema30"
         }
       ]
     },
-    "__schema29": {
+    "__schema30": {
+      "type": "string",
+      "pattern": "^\\$\\w+$"
+    },
+    "__schema31": {
       "type": "string",
       "enum": [
         "linear",
@@ -989,7 +1001,7 @@
         "float"
       ]
     },
-    "__schema30": {
+    "__schema32": {
       "oneOf": [
         {
           "type": "object",
@@ -998,44 +1010,44 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
               "const": "story_scene"
             },
             "timeline": {
-              "$ref": "#/$defs/__schema24"
+              "$ref": "#/$defs/__schema25"
             }
           },
           "required": [
@@ -1056,37 +1068,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1096,7 +1108,7 @@
               "minItems": 1,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema42"
+                "$ref": "#/$defs/__schema44"
               }
             }
           },
@@ -1118,37 +1130,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1166,7 +1178,7 @@
               "maxItems": 4,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "correctAnswer": {
@@ -1196,37 +1208,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1244,7 +1256,7 @@
               "maxItems": 4,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "correctAnswer": {
@@ -1274,37 +1286,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1322,7 +1334,7 @@
               "maxItems": 4,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "correctAnswer": {
@@ -1352,37 +1364,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1400,7 +1412,7 @@
               "maxItems": 4,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "correctAnswer": {
@@ -1430,37 +1442,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1478,7 +1490,7 @@
               "maxItems": 4,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "correctAnswer": {
@@ -1508,37 +1520,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1556,7 +1568,7 @@
               "maxItems": 4,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "correctAnswer": {
@@ -1586,37 +1598,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1627,7 +1639,7 @@
               "maxItems": 5,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema44"
+                "$ref": "#/$defs/__schema46"
               }
             },
             "correctOrder": {
@@ -1656,37 +1668,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1697,7 +1709,7 @@
               "maxItems": 5,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema44"
+                "$ref": "#/$defs/__schema46"
               }
             },
             "correctOrder": {
@@ -1731,37 +1743,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1772,7 +1784,7 @@
               "maxItems": 6,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema46"
+                "$ref": "#/$defs/__schema48"
               }
             }
           },
@@ -1794,37 +1806,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1838,7 +1850,7 @@
               "maxItems": 4,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "predictionKey": {
@@ -1865,37 +1877,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1905,7 +1917,7 @@
               "minItems": 2,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "subjects": {
@@ -1913,7 +1925,7 @@
               "maxItems": 6,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema47"
+                "$ref": "#/$defs/__schema49"
               }
             }
           },
@@ -1936,37 +1948,37 @@
               "$ref": "#/$defs/__schema0"
             },
             "scenarioId": {
-              "$ref": "#/$defs/__schema31"
-            },
-            "order": {
-              "$ref": "#/$defs/__schema32"
-            },
-            "sceneId": {
               "$ref": "#/$defs/__schema33"
             },
-            "instruction": {
+            "order": {
               "$ref": "#/$defs/__schema34"
             },
-            "sceneOverrides": {
+            "sceneId": {
               "$ref": "#/$defs/__schema35"
             },
-            "intro": {
+            "instruction": {
               "$ref": "#/$defs/__schema36"
             },
-            "outro": {
+            "sceneOverrides": {
               "$ref": "#/$defs/__schema37"
             },
-            "teacherPrompts": {
+            "intro": {
               "$ref": "#/$defs/__schema38"
             },
-            "learningObjectives": {
+            "outro": {
               "$ref": "#/$defs/__schema39"
             },
-            "observation": {
+            "teacherPrompts": {
               "$ref": "#/$defs/__schema40"
             },
-            "icon": {
+            "learningObjectives": {
               "$ref": "#/$defs/__schema41"
+            },
+            "observation": {
+              "$ref": "#/$defs/__schema42"
+            },
+            "icon": {
+              "$ref": "#/$defs/__schema43"
             },
             "type": {
               "type": "string",
@@ -1984,7 +1996,7 @@
               "maxItems": 3,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema43"
+                "$ref": "#/$defs/__schema45"
               }
             },
             "items": {
@@ -1992,7 +2004,7 @@
               "maxItems": 8,
               "type": "array",
               "items": {
-                "$ref": "#/$defs/__schema48"
+                "$ref": "#/$defs/__schema50"
               }
             }
           },
@@ -2011,20 +2023,20 @@
         }
       ]
     },
-    "__schema31": {
-      "type": "string"
-    },
-    "__schema32": {
-      "type": "number"
-    },
     "__schema33": {
       "type": "string"
     },
     "__schema34": {
+      "type": "number"
+    },
+    "__schema35": {
+      "type": "string"
+    },
+    "__schema36": {
       "type": "string",
       "minLength": 1
     },
-    "__schema35": {
+    "__schema37": {
       "type": "object",
       "propertyNames": {
         "type": "string"
@@ -2033,80 +2045,80 @@
         "type": "object",
         "properties": {
           "asset": {
-            "$ref": "#/$defs/__schema10"
-          },
-          "x": {
             "$ref": "#/$defs/__schema11"
           },
-          "y": {
+          "x": {
             "$ref": "#/$defs/__schema12"
           },
-          "w": {
+          "y": {
             "$ref": "#/$defs/__schema13"
           },
-          "h": {
+          "w": {
             "$ref": "#/$defs/__schema14"
           },
-          "z": {
+          "h": {
             "$ref": "#/$defs/__schema15"
           },
-          "flip": {
+          "z": {
             "$ref": "#/$defs/__schema16"
           },
-          "rotate": {
+          "flip": {
             "$ref": "#/$defs/__schema17"
           },
-          "scale": {
+          "rotate": {
             "$ref": "#/$defs/__schema18"
           },
-          "anim": {
+          "scale": {
             "$ref": "#/$defs/__schema19"
           },
-          "hidden": {
+          "anim": {
             "$ref": "#/$defs/__schema20"
           },
-          "label": {
+          "hidden": {
             "$ref": "#/$defs/__schema21"
           },
-          "zone": {
+          "label": {
             "$ref": "#/$defs/__schema22"
           },
-          "decor": {
+          "zone": {
             "$ref": "#/$defs/__schema23"
+          },
+          "decor": {
+            "$ref": "#/$defs/__schema24"
           }
         },
         "additionalProperties": false
       }
     },
-    "__schema36": {
-      "$ref": "#/$defs/__schema24"
-    },
-    "__schema37": {
-      "$ref": "#/$defs/__schema24"
-    },
     "__schema38": {
+      "$ref": "#/$defs/__schema25"
+    },
+    "__schema39": {
+      "$ref": "#/$defs/__schema25"
+    },
+    "__schema40": {
       "type": "array",
       "items": {
         "type": "string",
         "minLength": 1
       }
     },
-    "__schema39": {
+    "__schema41": {
       "type": "array",
       "items": {
         "type": "string"
       }
     },
-    "__schema40": {
-      "type": "string"
-    },
-    "__schema41": {
-      "type": "string"
-    },
     "__schema42": {
       "type": "string"
     },
     "__schema43": {
+      "type": "string"
+    },
+    "__schema44": {
+      "type": "string"
+    },
+    "__schema45": {
       "type": "object",
       "properties": {
         "id": {
@@ -2129,14 +2141,14 @@
       ],
       "additionalProperties": false
     },
-    "__schema44": {
+    "__schema46": {
       "type": "object",
       "properties": {
         "id": {
           "$ref": "#/$defs/__schema0"
         },
         "label": {
-          "$ref": "#/$defs/__schema45"
+          "$ref": "#/$defs/__schema47"
         },
         "visual": {
           "$ref": "#/$defs/__schema4"
@@ -2149,18 +2161,18 @@
       ],
       "additionalProperties": false
     },
-    "__schema45": {
+    "__schema47": {
       "type": "string",
       "minLength": 1
     },
-    "__schema46": {
+    "__schema48": {
       "type": "object",
       "properties": {
         "id": {
           "$ref": "#/$defs/__schema0"
         },
         "label": {
-          "$ref": "#/$defs/__schema45"
+          "$ref": "#/$defs/__schema47"
         },
         "visual": {
           "$ref": "#/$defs/__schema4"
@@ -2178,7 +2190,7 @@
       ],
       "additionalProperties": false
     },
-    "__schema47": {
+    "__schema49": {
       "type": "object",
       "properties": {
         "entity": {
@@ -2194,7 +2206,7 @@
           "type": "string"
         },
         "timeline": {
-          "$ref": "#/$defs/__schema24"
+          "$ref": "#/$defs/__schema25"
         }
       },
       "required": [
@@ -2205,7 +2217,7 @@
       ],
       "additionalProperties": false
     },
-    "__schema48": {
+    "__schema50": {
       "type": "object",
       "properties": {
         "id": {

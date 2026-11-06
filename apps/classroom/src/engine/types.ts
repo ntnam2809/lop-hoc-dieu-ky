@@ -191,6 +191,9 @@ export const SOUND_NAMES: SoundName[] = [
   'bubble', 'whoosh', 'sparkle', 'hop', 'fanfare', 'thud', 'page', 'chime',
 ];
 
+/** Tham chiếu tham số timeline mẫu, vd `$delay`; được thay bằng số khi chạy. */
+export type Param = `$${string}`;
+
 export type Step =
   | { do: 'move'; target: Target; to: Point | Target; duration?: number; ease?: Ease; arc?: number; offset?: Point }
   | { do: 'show'; target: Target; effect?: 'pop' | 'fade' | 'grow' }
@@ -199,11 +202,11 @@ export type Step =
   | { do: 'emote'; target: Target; emote: Emote; duration?: number }
   | { do: 'fx'; fx: FxKind; at: Point | Target; size?: number; offset?: Point }
   | { do: 'say'; text: string; target?: Target; hold?: number }
-  | { do: 'wait'; ms: number }
+  | { do: 'wait'; ms: number | Param }
   | { do: 'sound'; sound: SoundName }
   | { do: 'flip'; target: Target; value: boolean }
-  | { do: 'scale'; target: Target; to: number; duration?: number; ease?: Ease }
-  | { do: 'rotate'; target: Target; to: number; duration?: number; ease?: Ease }
+  | { do: 'scale'; target: Target; to: number | Param; duration?: number; ease?: Ease }
+  | { do: 'rotate'; target: Target; to: number | Param; duration?: number; ease?: Ease }
   | { do: 'camera'; zoom: number; focus?: Point | Target; duration?: number; ease?: Ease }
   | { do: 'parallel'; steps: Step[] }
   | { do: 'play'; timeline: string; args?: TemplateArgs };

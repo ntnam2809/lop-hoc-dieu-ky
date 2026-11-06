@@ -9,7 +9,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^[a-z]+_[a-z0-9-]+_(character|object|background|icon|overlay|audio)_[a-z0-9-]+_v\\d{2}$"
+            "pattern": "^[a-z]+_[a-z0-9-]+_(character|object|liquid|background|icon|overlay|audio)_[a-z0-9-]+_v\\d{2}$"
           },
           "type": {
             "type": "string",

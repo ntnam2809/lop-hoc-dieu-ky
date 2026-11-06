@@ -3,6 +3,17 @@
  * Không phải AI tạo sinh: chỉ đọc đúng văn bản đã duyệt trong gói nội dung.
  * Không có giọng vi-VN → im lặng, phụ đề vẫn hiển thị để giáo viên đọc.
  */
+/**
+ * Chọn giọng đọc: chỉ giọng tiếng Việt; `voice` (từ `?voice=`) là chuỗi con tên
+ * ép giọng; không ép thì ưu tiên Google / Hoài My, rồi giọng vi đầu tiên.
+ */
+export function pickVoice<V extends { name: string; lang?: string }>(voices: readonly V[], voiceQuery?: string | null): V | null {
+  const vi = voices.filter((v) => v.lang?.toLowerCase().startsWith('vi'));
+  const q = voiceQuery?.toLowerCase();
+  const forced = q ? vi.find((v) => v.name.toLowerCase().includes(q)) : undefined;
+  return forced ?? vi.find((v) => /google|hoai\s?my/i.test(v.name)) ?? vi[0] ?? null;
+}
+
 class Narrator {
   enabled = true;
   private voice: SpeechSynthesisVoice | null = null;
@@ -11,8 +22,7 @@ class Narrator {
   private init() {
     if (this.ready || typeof speechSynthesis === 'undefined') return;
     const choose = () => {
-      const voices = speechSynthesis.getVoices();
-      this.voice = voices.find((v) => v.lang?.toLowerCase().startsWith('vi')) ?? null;
+      this.voice = pickVoice(speechSynthesis.getVoices(), new URLSearchParams(location.search).get('voice'));
     };
     choose();
     speechSynthesis.addEventListener?.('voiceschanged', choose);
