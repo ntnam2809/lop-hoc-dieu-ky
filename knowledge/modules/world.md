@@ -24,7 +24,8 @@ Phiên học bên trong phòng (→ classroom) · bài học (→ learning) · a
 - Asset campus là tạm (vector/tile đơn giản) — không tự chốt visual cuối (HO-0012 ngoài phạm vi).
 
 ## Trạng thái
-Chưa có code. ADR-0003 chờ spike S1.
+Spike S1 (2026-11-06): WO-01 PASS — khung `apps/server` + `apps/campus`, dep pin (phaser 4.2.1, colyseus 0.18.10, @colyseus/sdk 0.18.6, schema 5.0.42), script gốc `check:world`/`test:e2e`. WO-02..06 chưa làm. ADR-0003 chờ số đo.
+Quyết định anh Nam: MVP-A dùng hạ tầng miễn phí, tối đa 20 người/phiên live → campus spike `MAX_CLIENTS=20` (env `CAMPUS_MAX_CLIENTS` chỉ để đo 30 avatar); server chạy được trên host free (ngủ/khởi động lạnh).
 
 ## Việc kế tiếp — Spike S1 (M1)
 1. `apps/campus` tối thiểu: một tilemap sân, avatar chạm-để-đi + phím.

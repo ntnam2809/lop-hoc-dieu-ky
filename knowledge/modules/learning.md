@@ -27,6 +27,8 @@ Phiên/kết quả phía server (→ classroom) · campus (→ world). Firebase 
 ## Trạng thái
 M0 ✓: source chuyển về, 2 bài trong build, validate/typecheck/vitest 14/14/build/Playwright 3/3 xanh. Bản deploy (gốc repo) mới hơn source: 4 bài + sửa show/fade.
 
+M1 đang làm: WO-01 (khám phá delta) PASS — 6 delta: `$x` ở ms/to (schema+types), id asset `liquid`, `layers` rỗng (refine: rỗng thì phải có `bg`), show/fade (`opacity=0; apply()` trước tween), topic `kitchen-magic`, chọn giọng vi (speech.ts). Runtime còn lại ≈ deploy. WO-02 hiện thực, WO-03 chuyển bài + e2e, WO-04 tài liệu.
+
 ## Việc kế tiếp
 - M1 (Q-10): port engine delta — `$x` ở `ms`/`to`, asset `liquid`, `layers` rỗng, show/fade mượt — rồi đưa 4 bài về `content/lessons/` từng bài, E2E chơi trọn (`docs/MIGRATION.md` bước 4–5).
 - M2: `Grader` từ gói bài · M3: chế độ đồng bộ theo `session.state`, nộp kết quả lên server.
