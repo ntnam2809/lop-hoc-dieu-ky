@@ -24,14 +24,15 @@ Phiên học bên trong phòng (→ classroom) · bài học (→ learning) · a
 - Asset campus là tạm (vector/tile đơn giản) — không tự chốt visual cuối (HO-0012 ngoài phạm vi).
 
 ## Trạng thái
-Spike S1 (2026-11-06): WO-01 PASS — khung `apps/server` + `apps/campus`, dep pin (phaser 4.2.1, colyseus 0.18.10, @colyseus/sdk 0.18.6, schema 5.0.42), script gốc `check:world`/`test:e2e`. WO-02 PASS (room campus, `movement.ts` thuần, `/health` qua option `express`, schema 5 không decorator, `onDrop` 30 s; joinOrCreate đầy → tự mở room thứ hai, đúng ADR-0008). WO-03 PASS (client Phaser 4.2.1, bundle thô gzip ~398 KiB; reconnect tự viết 1 s/30 s với `room.reconnection.enabled=false`, nhánh token-hết-hạn và `correct` chưa có bằng chứng, giao WO-05). WO-07 PASS: server dùng xô ngân sách (cap 55 px) thay dt giữa hai message; client tích phân bằng `performance.now()` (delta Phaser bị làm mượt); ca reconnect flaky do SDK `reconnection.minUptime=5000` mặc định, đã đặt 0. e2e campus 9 ca xanh 5/5. WO-04 đo lần 1 (trước WO-07) → đo lại (WO-04b); WO-06 soát cuối chờ. Mở: heap +45%/10 vòng chưa kết luận; fps SwiftShader chỉ là proxy; chưa đo campus ↔ sân khấu bài học. ADR-0003 chờ số đo.
-Quyết định anh Nam: MVP-A dùng hạ tầng miễn phí, tối đa 20 người/phiên live → campus spike `MAX_CLIENTS=20` (env `CAMPUS_MAX_CLIENTS` chỉ để đo 30 avatar); server chạy được trên host free (ngủ/khởi động lạnh).
+Spike S1 (2026-11-06) đã dựng và đo xong; chờ WO-06 (soát) rồi manager chốt ADR. Có: `apps/server` (room `campus` Colyseus 0.18, `movement.ts` thuần với xô ngân sách cap 55 px, trần 20, `/health`, bot) · `apps/campus` (Phaser 4.2.1, tạm vector, chạm/phím, dự đoán + nội suy, reconnect, cold start 'waking') · e2e 9 ca xanh 5/5 · doc `docs/spikes/S1-campus-realtime.md`. Pin: phaser 4.2.1, colyseus 0.18.10, @colyseus/sdk 0.18.6, schema 5.0.42.
+Số đo (SwiftShader, không GPU, chỉ proxy): bundle gzip 400,5 KiB (đạt <=1,5 MB) · fps 40,5 / 29,3 / 25,4 cho 1/20/30 avatar (mốc 50 fps không đánh giá được) · heap 60 vòng dốc ~8 KB/vòng, nửa sau 1,7-4,0: không thấy rò · A->B median 155 ms (gồm 100 ms đệm) · server RSS ~92 MB với 19 bot, cold start <1 s.
+Phát hiện cho M2: SDK `reconnection.minUptime=5000` phải đặt 0 · delta Phaser bị làm mượt, dùng `performance.now()` · đóng tab thẳng để người ma 30 s, cần `unmount()` · `joinOrCreate` tràn trần mở room phụ, cần luật gán room · hook `window.__campus` còn trong bundle, gắn cờ dev ở M2.
+Quyết định anh Nam: MVP-A dùng hạ tầng miễn phí, tối đa 20 người/phiên live -> `MAX_CLIENTS=20` (env `CAMPUS_MAX_CLIENTS` chỉ để đo).
 
-## Việc kế tiếp — Spike S1 (M1)
-1. `apps/campus` tối thiểu: một tilemap sân, avatar chạm-để-đi + phím.
-2. Room realtime (Colyseus ứng viên, dự phòng `ws`) với 2+ client thấy nhau; reconnect.
-3. Đo: fps tablet với 30 avatar (bot), bundle gzip, rò bộ nhớ khi chuyển campus ↔ sân khấu bài học 10 lần.
-4. Báo kết quả so với tiêu chí ADR-0003 → manager quyết giữ/lật ADR.
+## Việc kế tiếp
+1. Manager chốt ADR-0003 (đề xuất giữ có điều kiện, sửa chữ "Phaser 3" thành 4.x) và ADR-0004 (giữ Colyseus) sau WO-06.
+2. Chưa đo: campus <-> sân khấu bài học (classroom overlay) · fps trên tablet thật (Q-01) · hạn mức host free · nhánh hết hạn 30 s ở room.
+3. M2: nối SchoolService/auth vào room, luật gán instance, import 20 từ domain, gắn cờ dev cho hook test.
 
 ## RPG người lớn (MVP-A, M3)
 Avatar, trang phục, chuỗi nhiệm vụ, EXP, huy hiệu, chế độ "nhìn như con" — khung ở `docs/DESIGN.md` §8, chờ Q-12. Chỉ trong không gian `play`.
