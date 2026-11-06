@@ -37,7 +37,7 @@ describe('sanitizeName', () => {
   it('cắt khoảng trắng', () => expect(sanitizeName('  Nam  ', 'abcd1234')).toBe('Nam'));
   it('rỗng, quá dài, không phải chuỗi → Khách-<4 ký tự>', () => {
     expect(sanitizeName('   ', 'abcd1234')).toBe('Khách-abcd');
-    expect(sanitizeName('x'.repeat(21), 'abcd1234')).toBe('Khách-abcd');
+    expect(sanitizeName('x'.repeat(21), 'abcd1234')).toBe('x'.repeat(20));
     expect(sanitizeName(42, 'abcd1234')).toBe('Khách-abcd');
     expect(sanitizeName(undefined, 'abcd1234')).toBe('Khách-abcd');
   });

@@ -34,6 +34,7 @@ export function validateMove(prev: PrevState, req: MoveRequest, nowMs: number): 
 
 export function sanitizeName(raw: unknown, idFallback: string): string {
   const s = typeof raw === 'string' ? raw.trim() : '';
-  if (s.length >= 1 && s.length <= 20) return s;
-  return `Khách-${idFallback.slice(0, 4)}`;
+  // Tên dài hơn 20 ký tự (tính theo code point) bị cắt bớt, không thay bằng tên mặc định.
+  const cut = [...s].slice(0, 20).join('').trim();
+  return cut.length >= 1 ? cut : `Khách-${idFallback.slice(0, 4)}`;
 }
