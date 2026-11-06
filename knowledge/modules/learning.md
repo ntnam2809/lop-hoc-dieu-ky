@@ -27,7 +27,7 @@ Phiên/kết quả phía server (→ classroom) · campus (→ world). Firebase 
 ## Trạng thái
 M0 ✓: source chuyển về, 2 bài trong build, validate/typecheck/vitest 14/14/build/Playwright 3/3 xanh. Bản deploy (gốc repo) mới hơn source: 4 bài + sửa show/fade.
 
-M1 đang làm: WO-01 (khám phá delta) PASS — 6 delta: `$x` ở ms/to (schema+types), id asset `liquid`, `layers` rỗng (refine: rỗng thì phải có `bg`), show/fade (`opacity=0; apply()` trước tween), topic `kitchen-magic`, chọn giọng vi (speech.ts). Runtime còn lại ≈ deploy. WO-02 hiện thực, WO-03 chuyển bài + e2e, WO-04 tài liệu.
+M1 đang làm: WO-01 (khám phá delta) PASS — 6 delta: `$x` ở ms/to (schema+types), id asset `liquid`, `layers` rỗng (refine: rỗng thì phải có `bg`), show/fade (`opacity=0; apply()` trước tween), topic `kitchen-magic`, chọn giọng vi (speech.ts). Runtime còn lại ≈ deploy. WO-02 PASS (6 delta trong source, vitest 22). WO-03 PASS: 6 bài ở `content/lessons/` (đều `status: review`), validate 0 lỗi 11 cảnh báo, e2e classroom 7/7; test qa chỉ đòi sạch cảnh báo với bài approved/published. `recovered/` chỉ còn README. WO-04 tài liệu đang chờ. Đề xuất chờ anh Nam: rút gọn câu yêu cầu 8–13 từ (purple-cabbage, dancing-rice).
 
 ## Việc kế tiếp
 - M1 (Q-10): port engine delta — `$x` ở `ms`/`to`, asset `liquid`, `layers` rỗng, show/fade mượt — rồi đưa 4 bài về `content/lessons/` từng bài, E2E chơi trọn (`docs/MIGRATION.md` bước 4–5).
