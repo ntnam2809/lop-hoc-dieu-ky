@@ -1,5 +1,6 @@
 // Công cụ đo spike S1 (fps, bundle, rò bộ nhớ, độ trễ, tài nguyên server).
 // Chạy: npm run build -w @lhdk/campus && npm run measure -w @lhdk/campus
+// (bundle đo trên dist production; trình duyệt đo chạy trên dist-measure, build --mode measure có hook test, tự build)
 // Cờ/ENV: --server-port / MEASURE_SERVER_PORT (2577) · --stress-port / MEASURE_STRESS_PORT (2578)
 //         --preview-port / MEASURE_PREVIEW_PORT (5197) · --out-dir / MEASURE_OUT_DIR
 //         --only fps,bundle,leak,latency,server,throttle (mặc định: tất cả) · --rounds N (vòng rò bộ nhớ, mặc định 10) · PW_CHROMIUM
@@ -149,7 +150,7 @@ function slope(ys: number[]): number {
 
 // ---------- server / preview / bots ----------
 function startServer(port: number, maxClients?: number): ChildProcess {
-  const env: NodeJS.ProcessEnv = { PORT: String(port), CAMPUS_LOG_CORRECT: '1' };
+  const env: NodeJS.ProcessEnv = { PORT: String(port), CAMPUS_LOG_CORRECT: '1', AUTH_MODE: 'dev' };
   if (maxClients) env.CAMPUS_MAX_CLIENTS = String(maxClients);
   return run('npm', ['run', 'start', '-w', '@lhdk/server'], { env });
 }
@@ -187,7 +188,7 @@ async function waitPlayers(page: Page, target: number, timeoutMs = 30_000): Prom
   let n = -1;
   while (Date.now() - t0 < timeoutMs) {
     n = await page.evaluate(() => {
-      const s = window.__campus.state();
+      const s = window.__campus!.state();
       return s.connected ? s.players.length : -1;
     });
     if (n === target) return n;
@@ -221,7 +222,7 @@ async function fpsScenario(b: Browser, label: string, port: number, avatars: num
       SAMPLE_MS,
     );
     const after = await page.evaluate(() => {
-      const s = window.__campus.state();
+      const s = window.__campus!.state();
       return { players: s.players.length, gameFps: s.fps, rtt: s.rtt };
     });
     dts.shift(); // khung đầu có thể dài bất thường do khởi động bộ đếm
@@ -242,7 +243,7 @@ async function fpsScenario(b: Browser, label: string, port: number, avatars: num
     };
   } finally {
     // Rời phòng có chủ đích: đóng tab thẳng sẽ để server giữ chỗ reconnect 30 s (ghost) và làm lệch phép đếm.
-    await page.evaluate(() => window.__campus.unmount()).catch(() => {});
+    await page.evaluate(() => window.__campus!.unmount()).catch(() => {});
     await sleep(800);
     await page.context().close();
   }
@@ -309,10 +310,10 @@ async function leak(b: Browser) {
     const observerBase = count();
     const rounds: Array<Record<string, number>> = [];
     for (let i = 1; i <= LEAK_ROUNDS; i++) {
-      await page.evaluate(() => window.__campus.mount());
+      await page.evaluate(() => window.__campus!.mount());
       await sleep(2000);
       const whileMounted = count() - 1; // trừ chính observer
-      await page.evaluate(() => window.__campus.unmount());
+      await page.evaluate(() => window.__campus!.unmount());
       const t0 = Date.now();
       while (count() > observerBase && Date.now() - t0 < 5000) await sleep(50);
       const closeMs = Date.now() - t0;
@@ -355,11 +356,11 @@ async function latency(b: Browser) {
     await pa.goto(url(`name=A&server=ws://localhost:${SERVER_PORT}`));
     await pb.goto(url(`name=B&server=ws://localhost:${SERVER_PORT}`));
     if ((await waitPlayers(pa, 2)) !== 2 || (await waitPlayers(pb, 2)) !== 2) throw new Error('latency: hai tab chưa thấy nhau');
-    const idA = await pa.evaluate(() => window.__campus.state().self!.id);
+    const idA = await pa.evaluate(() => window.__campus!.state().self!.id);
     const settle = async (x: number, y: number) => {
       for (let i = 0; i < 100; i++) {
         const near = await pa.evaluate(([tx, ty]) => {
-          const s = window.__campus.state().self!;
+          const s = window.__campus!.state().self!;
           return Math.hypot(s.x - tx!, s.y - ty!) < 3;
         }, [x, y]);
         if (near) break;
@@ -367,14 +368,14 @@ async function latency(b: Browser) {
       }
       await sleep(400);
     };
-    await pa.evaluate(() => window.__campus.moveTo(300, 360));
+    await pa.evaluate(() => window.__campus!.moveTo(300, 360));
     await settle(300, 360);
     const samples: number[] = [];
     for (let i = 0; i < LATENCY_SAMPLES; i++) {
       const tx = i % 2 === 0 ? 900 : 300;
       // Gài bộ chờ ở B: ghi Date.now() khi vị trí A trong state của B lệch > 2 px so với lúc gài.
       await pb.evaluate((id) => {
-        const find = () => window.__campus.state().players.find((p) => p.id === id);
+        const find = () => window.__campus!.state().players.find((p) => p.id === id);
         const p0 = find()!;
         (window as any).__w = new Promise<number>((resolveP) => {
           const poll = () => {
@@ -385,7 +386,7 @@ async function latency(b: Browser) {
           poll();
         });
       }, idA);
-      const t0 = await pa.evaluate((x) => { const t = Date.now(); window.__campus.moveTo(x, 360); return t; }, tx);
+      const t0 = await pa.evaluate((x) => { const t = Date.now(); window.__campus!.moveTo(x, 360); return t; }, tx);
       const t1 = await Promise.race([
         pb.evaluate(() => (window as any).__w as Promise<number>),
         sleep(5000).then(() => { throw new Error('latency: quá 5 s không thấy A di chuyển'); }),
@@ -407,8 +408,8 @@ async function latency(b: Browser) {
       definition: 'moveTo(A) -> state() của B thấy vị trí A lệch > 2 px; Date.now() cùng máy; polling setTimeout(0)',
     };
   } finally {
-    await pa.evaluate(() => window.__campus.unmount()).catch(() => {});
-    await pb.evaluate(() => window.__campus.unmount()).catch(() => {});
+    await pa.evaluate(() => window.__campus!.unmount()).catch(() => {});
+    await pb.evaluate(() => window.__campus!.unmount()).catch(() => {});
     await sleep(500);
     await pa.context().close();
     await pb.context().close();
@@ -425,12 +426,12 @@ async function throttle(b: Browser) {
     await page.goto(url(`name=Thr&server=ws://localhost:${SERVER_PORT}`));
     if ((await waitPlayers(page, 1)) !== 1) throw new Error('throttle: chưa vào phòng');
     const goAndMeasure = async (x: number, y: number) => page.evaluate(([tx, ty]) => new Promise<{ px_per_s: number; dist: number; ms: number; arrived: boolean }>((res) => {
-      const s0 = window.__campus.state().self!;
+      const s0 = window.__campus!.state().self!;
       const p0 = { x: s0.x, y: s0.y };
       const t0 = performance.now();
-      window.__campus.moveTo(tx!, ty!);
+      window.__campus!.moveTo(tx!, ty!);
       const tick = () => {
-        const s = window.__campus.state().self!;
+        const s = window.__campus!.state().self!;
         const ms = performance.now() - t0;
         const arrived = Math.hypot(s.x - tx!, s.y - ty!) < 3;
         if (arrived || ms > 90_000) {
@@ -462,7 +463,7 @@ async function throttle(b: Browser) {
     await cdp.send('Emulation.setCPUThrottlingRate', { rate: 1 });
     return { client_speed_px_s: 200, server_cap_px_s: 220, levels };
   } finally {
-    await page.evaluate(() => window.__campus.unmount()).catch(() => {});
+    await page.evaluate(() => window.__campus!.unmount()).catch(() => {});
     await sleep(500);
     await page.context().close();
   }
@@ -488,7 +489,7 @@ async function main() {
   const cold: Record<string, number> = {};
   if (ONLY.has('server')) {
     log('cold start');
-    const p = run('npx', ['tsx', 'src/index.ts'], { cwd: join(ROOT, 'apps', 'server'), env: { PORT: String(SERVER_PORT) } });
+    const p = run('npx', ['tsx', 'src/index.ts'], { cwd: join(ROOT, 'apps', 'server'), env: { PORT: String(SERVER_PORT), AUTH_MODE: 'dev' } });
     cold.npx_tsx_ms = Math.round(await waitHealth(SERVER_PORT));
     await stop(p);
     await sleep(500);
@@ -503,7 +504,14 @@ async function main() {
   if (ONLY.has('server')) result.cold_start = cold;
 
   const needBrowser = ['fps', 'leak', 'latency', 'throttle'].some((k) => ONLY.has(k));
-  const preview = needBrowser ? run('npx', ['vite', 'preview', '--port', String(PREVIEW_PORT), '--strictPort'], { cwd: CAMPUS }) : null;
+  // Trình duyệt đo cần hook test (__campus, ?server=): build riêng --mode measure vào dist-measure, không đụng dist production.
+  if (needBrowser) {
+    log('vite build --mode measure --outDir dist-measure');
+    execFileSync('npx', ['vite', 'build', '--mode', 'measure', '--outDir', 'dist-measure'], { cwd: CAMPUS, stdio: 'ignore' });
+  }
+  const preview = needBrowser
+    ? run('npx', ['vite', 'preview', '--outDir', 'dist-measure', '--port', String(PREVIEW_PORT), '--strictPort'], { cwd: CAMPUS })
+    : null;
   const res: Record<string, unknown> = {};
   const serverRes: Record<string, unknown> = {};
   try {

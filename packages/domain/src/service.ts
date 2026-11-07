@@ -1,6 +1,8 @@
 import { defaultChatLimiter, checkChat, type ChatCatalog, DEFAULT_CHAT_CATALOG, type RateLimiter } from './chat';
 import { conflict, forbidden, invalid, notFound, quota } from './errors';
+import { createGrader, recordOnlyGrader, type Grader, type LessonLookup } from './grading';
 import { LIVE_SESSION_MAX_PARTICIPANTS, PLANS, type PlanLimits } from './plans';
+import { normalizeSessionPlanInput, type SessionPlan, type SessionPlanInput } from './session-plan';
 import { createMemoryStore, type Store } from './store';
 import type {
   ActivityResult,
@@ -12,7 +14,6 @@ import type {
   Id,
   LessonSession,
   ModerationReport,
-  Outcome,
   PlanId,
   School,
   SchoolClass,
@@ -23,15 +24,15 @@ import type {
   User,
 } from './types';
 
-/** Chấm một câu trả lời. Module learning cấp bản thật (đọc đáp án trong gói bài); mặc định chỉ ghi nhận. */
-export type Grader = (lessonId: string, activityId: string, response: unknown) => Outcome;
-
 export interface ServiceDeps {
   store?: Store;
   clock?: () => Timestamp;
   /** Sinh id/mã. Server PHẢI cấp bản ngẫu nhiên an toàn cho `code` (mã vào lớp không được đoán được). */
-  ids?: (kind: 'user' | 'school' | 'class' | 'session' | 'message' | 'report' | 'code') => string;
+  ids?: (kind: 'user' | 'school' | 'class' | 'session' | 'message' | 'report' | 'code' | 'plan') => string;
+  /** Mặc định: chấm theo `lessons` nếu có, không thì chỉ ghi nhận. */
   grader?: Grader;
+  /** Tra khoá chấm/danh sách hoạt động theo bài. Có thì phiên và kế hoạch được kiểm theo bài thật. */
+  lessons?: LessonLookup;
   chatCatalog?: ChatCatalog;
   chatLimiter?: RateLimiter;
 }
@@ -57,6 +58,7 @@ export class SchoolService {
   private readonly now: () => Timestamp;
   private readonly id: NonNullable<ServiceDeps['ids']>;
   private readonly grade: Grader;
+  private readonly lessons: LessonLookup | undefined;
   private readonly catalog: ChatCatalog;
   private readonly limiter: RateLimiter;
 
@@ -64,7 +66,8 @@ export class SchoolService {
     this.store = deps.store ?? createMemoryStore();
     this.now = deps.clock ?? (() => Date.now());
     this.id = deps.ids ?? sequentialIds();
-    this.grade = deps.grader ?? (() => 'recorded');
+    this.lessons = deps.lessons;
+    this.grade = deps.grader ?? (deps.lessons ? createGrader(deps.lessons) : recordOnlyGrader);
     this.catalog = deps.chatCatalog ?? DEFAULT_CHAT_CATALOG;
     this.limiter = deps.chatLimiter ?? defaultChatLimiter();
   }
@@ -297,12 +300,82 @@ export class SchoolService {
     return c;
   }
 
+  // ───────────── kế hoạch phiên ─────────────
+
+  /** Chỉ người lớn có vai giáo viên/hiệu trưởng của đúng trường mới soạn/xem kế hoạch (riêng tư theo trường). */
+  canPlanIn(userId: Id, schoolId: Id): boolean {
+    const u = this.store.users.get(userId);
+    if (!u || u.ageBand !== 'adult') return false;
+    return this.hasRole(schoolId, userId, 'teacher') || this.hasRole(schoolId, userId, 'principal');
+  }
+
+  createSessionPlan(actorId: Id, schoolId: Id, input: SessionPlanInput): SessionPlan {
+    this.school(schoolId);
+    if (!this.canPlanIn(actorId, schoolId)) throw forbidden('Chỉ giáo viên/hiệu trưởng của trường mới soạn kế hoạch phiên');
+    const outline = this.lessons?.(input.lessonId);
+    if (!outline) throw notFound('bài học');
+    const content = normalizeSessionPlanInput(input, { lessonId: outline.lessonId, activityIds: outline.activityIds });
+    const at = this.now();
+    const plan: SessionPlan = {
+      id: this.id('plan'),
+      schoolId,
+      authorId: actorId,
+      ...content,
+      version: 1,
+      createdAt: at,
+      updatedAt: at,
+    };
+    this.store.sessionPlans.set(plan.id, plan);
+    this.audit(actorId, 'sessionPlan.create', schoolId, plan.id, { lessonId: plan.lessonId });
+    return plan;
+  }
+
+  updateSessionPlan(actorId: Id, planId: Id, input: SessionPlanInput): SessionPlan {
+    const plan = this.store.sessionPlans.get(planId);
+    if (!plan) throw notFound('kế hoạch phiên');
+    const isAuthor = plan.authorId === actorId && this.canPlanIn(actorId, plan.schoolId);
+    const isPrincipal = this.canPlanIn(actorId, plan.schoolId) && this.hasRole(plan.schoolId, actorId, 'principal');
+    if (!isAuthor && !isPrincipal) throw forbidden('Chỉ tác giả hoặc hiệu trưởng mới sửa kế hoạch phiên');
+    // Bài học của kế hoạch cố định từ lúc tạo; input.lessonId khác sẽ bị chuẩn hoá từ chối (INVALID).
+    const outline = this.lessons?.(plan.lessonId);
+    if (!outline) throw notFound('bài học');
+    const content = normalizeSessionPlanInput(input, { lessonId: outline.lessonId, activityIds: outline.activityIds });
+    const next: SessionPlan = { ...plan, ...content, version: plan.version + 1, updatedAt: this.now() };
+    this.store.sessionPlans.set(plan.id, next);
+    this.audit(actorId, 'sessionPlan.update', plan.schoolId, plan.id, { lessonId: next.lessonId, version: next.version });
+    return next;
+  }
+
+  sessionPlan(actorId: Id, planId: Id): SessionPlan {
+    const plan = this.store.sessionPlans.get(planId);
+    if (!plan) throw notFound('kế hoạch phiên');
+    if (!this.canPlanIn(actorId, plan.schoolId)) throw forbidden('Chỉ giáo viên/hiệu trưởng của trường mới xem kế hoạch phiên');
+    return plan;
+  }
+
+  listSessionPlans(actorId: Id, schoolId: Id): SessionPlan[] {
+    if (!this.canPlanIn(actorId, schoolId)) throw forbidden('Chỉ giáo viên/hiệu trưởng của trường mới xem kế hoạch phiên');
+    return [...this.store.sessionPlans.values()]
+      .filter((p) => p.schoolId === schoolId)
+      .sort((a, b) => a.createdAt - b.createdAt || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  }
+
   // ───────────── phiên học trực tiếp ─────────────
 
-  startSession(actorId: Id, classId: Id, lessonId: string): LessonSession {
+  startSession(actorId: Id, classId: Id, lessonId: string, options?: { planId?: Id }): LessonSession {
     const c = this.klass(classId);
     if (!this.canManageClass(actorId, c)) throw forbidden('Chỉ giáo viên của lớp mới mở phiên học');
     for (const s of this.store.sessions.values()) if (s.classId === classId && s.status === 'live') throw conflict('Lớp đang có phiên học');
+    if (this.lessons && !this.lessons(lessonId)) throw notFound('bài học');
+    const planId = options?.planId;
+    let planActivityIds: string[] | undefined;
+    if (planId !== undefined) {
+      const plan = this.store.sessionPlans.get(planId);
+      if (!plan) throw notFound('kế hoạch phiên');
+      if (plan.schoolId !== c.schoolId) throw forbidden('Kế hoạch thuộc trường khác');
+      if (plan.lessonId !== lessonId) throw invalid('Kế hoạch không khớp với bài học đã chọn');
+      planActivityIds = plan.steps.map((st) => st.activityId); // bản sao chụp: sửa kế hoạch sau đó không đổi phiên đang chạy
+    }
     const s: LessonSession = {
       id: this.id('session'),
       classId,
@@ -315,9 +388,10 @@ export class SchoolService {
       chatMode: this.school(c.schoolId).kind === 'play' ? 'open' : 'phrases',
       participants: [actorId],
       startedAt: this.now(),
+      ...(planId !== undefined && planActivityIds ? { planId, planActivityIds } : {}),
     };
     this.store.sessions.set(s.id, s);
-    this.audit(actorId, 'session.start', c.schoolId, s.id, { lessonId });
+    this.audit(actorId, 'session.start', c.schoolId, s.id, planId !== undefined ? { lessonId, planId } : { lessonId });
     return s;
   }
 
@@ -346,6 +420,11 @@ export class SchoolService {
   /** Giáo viên mở một hoạt động; học sinh chỉ nộp được cho hoạt động đang mở. */
   setActivity(actorId: Id, sessionId: Id, activityId: string): void {
     const s = this.manageSession(actorId, sessionId);
+    const lesson = this.lessons?.(s.lessonId);
+    if (lesson && !lesson.activityIds.includes(activityId)) throw notFound('hoạt động');
+    if (s.planActivityIds && !s.planActivityIds.includes(activityId)) {
+      throw conflict('Hoạt động không có trong kế hoạch phiên');
+    }
     s.currentActivityId = activityId;
     this.audit(actorId, 'session.activity', s.schoolId, s.id, { activityId });
   }
@@ -354,6 +433,8 @@ export class SchoolService {
     const s = this.live(sessionId);
     if (!s.participants.includes(actorId) || !this.isEnrolled(s.classId, actorId)) throw forbidden('Chỉ học sinh đã vào phiên mới nộp bài');
     if (s.currentActivityId !== activityId) throw conflict('Hoạt động này chưa mở hoặc đã qua');
+    // Chấm và chuẩn hoá TRƯỚC khi đụng store: lỗi chấm thì không lưu gì, attempts không tăng. Không lưu dữ liệu thô.
+    const g = this.grade(s.lessonId, activityId, response);
     const key = `${s.id}:${actorId}:${activityId}`;
     const prev = this.store.results.get(key);
     const r: ActivityResult = {
@@ -362,8 +443,8 @@ export class SchoolService {
       lessonId: s.lessonId,
       userId: actorId,
       activityId,
-      response,
-      outcome: this.grade(s.lessonId, activityId, response),
+      response: g.response,
+      outcome: g.outcome,
       attempts: (prev?.attempts ?? 0) + 1,
       at: this.now(),
     };

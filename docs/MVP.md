@@ -17,7 +17,7 @@
 | Chat | chữ tự do giữa người lớn + báo cáo/chặn/rate limit | chỉ câu/sticker, giáo viên điều chế độ | domain ✓ · UI M3 |
 | Livestream | streamer mode (ADR-0015) | **cấm** | M3 |
 | Auth | người lớn qua nhà cung cấp | trẻ: mã lớp + chọn hình trên thiết bị của tổ chức | M2–M4 |
-| Server + DB | HTTP + WS room + Postgres | như A | M2 |
+| Server + DB | HTTP + WS room + Firestore (ADR-0017, ADR-0018; Postgres hoãn) | như A | M2 |
 
 ## 3. Hành trình nghiệm thu
 

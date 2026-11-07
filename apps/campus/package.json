@@ -9,7 +9,7 @@
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
-    "check": "npm run typecheck && npm test && npm run build",
+    "check": "npm run typecheck && npm test && npm run build && node tools/assert-no-test-hooks.mjs",
     "test:e2e": "playwright test",
     "measure": "tsx tools/measure.ts"
   },

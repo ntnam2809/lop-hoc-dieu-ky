@@ -11,8 +11,8 @@ Trường học 2D trực tuyến: người lớn lập trường, mở lớp, d
 ## Mốc hiện tại
 - **M0 ✓** (HO-0012): review · thiết kế · ADR 0001–0015 · constitution · agent · monorepo · `packages/domain` (21 test, hai không gian) · `apps/classroom` (prototype source, xanh).
 - **M1 ✓:** spike S1 (`apps/campus` Phaser 4 + `apps/server` Colyseus 0.18, e2e 9 ca, số đo ở `docs/spikes/S1-campus-realtime.md`) · engine delta đã port, 6 bài trong build.
-- **M2 kế tiếp:** nối `packages/domain` vào server, Firebase Auth + Firestore, `SessionPlan`, Grader, luật gán instance.
-- Sau đó: M2 server + Postgres · **M3 = MVP-A** (người lớn, RPG, streamer mode) · **M4 = MVP-B** (tổ chức + trẻ).
+- **M2 ✓ (code, chưa deploy):** domain nối vào `apps/server` (API `/v1`, room campus có vé một lần, gán instance ≤ 20), lưu qua cổng `DocDb` (Firestore MVP, ADR-0018), `SessionPlan`, Grader chấm ở server (`StudentAck` cho trẻ), rate limit + `maxPayload`, `window.__campus` chỉ dev, campus `organization` đóng. Còn nợ M3: đăng nhập client, host free (Q-19), nợ an toàn ở `docs/DECISIONS.md` và `knowledge/modules/safety.md`.
+- Sau đó: **M3 = MVP-A** (người lớn, RPG, streamer mode) · **M4 = MVP-B** (tổ chức + trẻ).
 
 ## Bản đồ code
 

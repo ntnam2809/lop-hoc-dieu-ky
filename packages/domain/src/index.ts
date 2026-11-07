@@ -4,3 +4,6 @@ export * from './plans';
 export * from './chat';
 export * from './store';
 export * from './service';
+export * from './campus';
+export * from './grading';
+export * from './session-plan';

@@ -1,10 +1,12 @@
 import { Client, type Room } from '@colyseus/sdk';
-import { CorrectMsg, PlayerRow, ROOM, Status, TOKEN_KEY } from './protocol';
+import { CorrectMsg, PlayerRow, Status, TOKEN_KEY } from './protocol';
 import { retryDelay } from './retry';
+import type { SeatResult } from './seat';
 
 export interface NetOptions {
   server: string; // ws://host:port
-  name: string;
+  /** Xin ghế vào campus (POST /campus/seat); xem seat.ts. */
+  requestSeat: () => Promise<SeatResult>;
   onStatus(s: Status): void;
   /** Gọi mỗi lần state đổi. */
   onPlayers(rows: PlayerRow[], selfId: string): void;
@@ -22,6 +24,8 @@ export interface Net {
   destroy(): void;
 }
 
+const CLOSE_KICKED = 4029; // guard server đá
+const CLOSE_REPLACED = 4409; // tài khoản mở ở nơi khác
 const DROP_CLOSE = 4010; // CloseCode.MAY_TRY_RECONNECT: socket rơi bất thường, SDK báo onDrop
 
 function healthUrl(server: string): string {
@@ -40,6 +44,7 @@ export function createNet(opts: NetOptions): Net {
   let status: Status = 'connecting';
   const timers = new Set<ReturnType<typeof setTimeout>>();
   let pingTimer: ReturnType<typeof setInterval> | null = null;
+  let leaving = false; // pagehide: đã rời có chủ ý
   let flowId = 0; // huỷ luồng retry cũ khi bắt đầu luồng mới
 
   const setStatus = (s: Status) => {
@@ -93,7 +98,11 @@ export function createNet(opts: NetOptions): Net {
       room = null;
       stopPing();
       clearToken();
-      void freshJoin();
+      // Bị đá / mở ở nơi khác / đang rời trang: không tự vào lại.
+      if (code === CLOSE_KICKED) { setStatus('denied'); return; }
+      if (code === CLOSE_REPLACED) { setStatus('replaced'); return; }
+      if (leaving) return;
+      void joinFlow();
     });
     setStatus('connected');
     opts.onJoined(r.sessionId);
@@ -113,41 +122,67 @@ export function createNet(opts: NetOptions): Net {
     rtt = null;
   }
 
-  async function tryJoin(): Promise<boolean> {
+  type JoinOutcome = 'joined' | 'denied' | 'busy' | 'network';
+
+  async function tryJoin(): Promise<JoinOutcome> {
+    const seat = await opts.requestSeat();
+    if (destroyed) return 'network';
+    if (!seat.ok) {
+      console.debug(`[reconnect] seat failed kind=${seat.kind} status=${seat.status ?? '-'}`);
+      if (seat.kind === 'denied') setStatus('denied');
+      return seat.kind;
+    }
     try {
-      // Room đầy (20) thì joinOrCreate tự mở room thứ hai = instance phụ (ADR-0008);
-      // spike không có UI chọn instance, client chỉ thấy người trong room của mình.
-      const r = await client.joinOrCreate(ROOM, { name: opts.name });
-      if (destroyed) { void r.leave(); return false; }
+      const r = await client.joinById(seat.roomId, { ticket: seat.ticket });
+      if (destroyed) { void r.leave(); return 'network'; }
       adopt(r);
-      return true;
+      return 'joined';
     } catch (e: any) {
-      console.debug(`[reconnect] join failed code=${e?.code ?? e?.name}`);
-      return false;
+      // Đã có ghế mà vào phòng hỏng (phòng biến mất / khoá / auth từ chối): không phải 'denied',
+      // coi như bận và xin ghế mới ở lượt sau.
+      console.debug(`[reconnect] joinById failed code=${e?.code ?? e?.name}`);
+      return 'busy';
     }
   }
 
-  async function wakingFlow() {
-    const id = ++flowId;
-    setStatus('waking');
-    const t0 = performance.now();
-    for (;;) {
-      const d = retryDelay('waking', performance.now() - t0);
-      if (d === null) { if (id === flowId && !destroyed) setStatus('failed'); return; }
-      try { await fetch(healthUrl(opts.server), { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(5000) }); } catch { /* đang ngủ */ }
-      if (destroyed || id !== flowId) return;
-      if (await tryJoin()) return;
-      if (destroyed || id !== flowId) return;
-      await sleep(d);
-      if (destroyed || id !== flowId) return;
-    }
-  }
-
-  async function freshJoin() {
+  /** Vòng thử vào: busy → thử lại theo retryDelay; network → ping /health (máy chủ ngủ) rồi thử lại. */
+  async function joinFlow() {
     const id = ++flowId;
     setStatus('connecting');
-    if (await tryJoin()) return;
-    if (!destroyed && id === flowId) await wakingFlow();
+    const t0 = performance.now();
+    for (;;) {
+      const out = await tryJoin();
+      if (destroyed || id !== flowId) return;
+      if (out === 'joined' || out === 'denied') return;
+      const d = retryDelay('waking', performance.now() - t0);
+      if (d === null) { setStatus('failed'); return; }
+      setStatus(out === 'network' ? 'waking' : 'connecting');
+      await sleep(d);
+      if (destroyed || id !== flowId) return;
+      if (out === 'network') {
+        try { await fetch(healthUrl(opts.server), { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(5000) }); } catch { /* đang ngủ */ }
+        if (destroyed || id !== flowId) return;
+      }
+    }
+  }
+
+    // Đóng tab: rời gọn (consented) để server giải phóng ghế ngay, không giữ chỗ 30 s.
+  const onPageHide = () => {
+    leaving = true;
+    clearToken();
+    const r = room;
+    if (r) void r.leave(true).catch(() => {});
+  };
+  // Trang khôi phục từ bfcache: kết nối cũ đã đóng, vào lại.
+  const onPageShow = (e: Event) => {
+    if (!(e as PageTransitionEvent).persisted || destroyed || !leaving) return;
+    leaving = false;
+    room = null;
+    void joinFlow();
+  };
+  if (typeof window !== 'undefined') {
+    window.addEventListener('pagehide', onPageHide);
+    window.addEventListener('pageshow', onPageShow);
   }
 
   async function start() {
@@ -161,7 +196,7 @@ export function createNet(opts: NetOptions): Net {
       } catch { clearToken(); }
       if (destroyed) return;
     }
-    await freshJoin();
+    await joinFlow();
   }
   void start();
 
@@ -174,6 +209,10 @@ export function createNet(opts: NetOptions): Net {
     destroy() {
       destroyed = true;
       flowId++;
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('pagehide', onPageHide);
+        window.removeEventListener('pageshow', onPageShow);
+      }
       for (const t of timers) clearTimeout(t);
       timers.clear();
       stopPing();

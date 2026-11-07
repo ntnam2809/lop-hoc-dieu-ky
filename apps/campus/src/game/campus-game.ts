@@ -1,9 +1,14 @@
 import Phaser from 'phaser';
 import { createNet, type Net } from '../net/client';
+import type { SeatResult } from '../net/seat';
 import { CampusState, STATUS_LABEL, Status, WORLD_H, WORLD_W } from '../net/protocol';
 import { YardScene } from './yard-scene';
 
-export interface CampusOptions { name: string; server: string }
+export interface CampusOptions {
+  server: string;
+  /** Xin ghế vào campus (xem net/seat.ts). */
+  requestSeat: () => Promise<SeatResult>;
+}
 
 export interface CampusHandle {
   destroy(): void;
@@ -50,7 +55,7 @@ export function mountCampus(el: HTMLElement, opts: CampusOptions): CampusHandle 
   let pendingRestore = false;
   net = createNet({
     server: opts.server,
-    name: opts.name,
+    requestSeat: opts.requestSeat,
     onStatus: (s) => {
       if (destroyed) return;
       showStatus(s);
