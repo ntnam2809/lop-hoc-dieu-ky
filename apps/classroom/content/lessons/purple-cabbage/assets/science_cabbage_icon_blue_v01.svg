@@ -1,0 +1,12 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'>
+<defs><linearGradient id='ib' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#6ED0F5'/><stop offset='1' stop-color='#2A93D8'/></linearGradient></defs>
+<g transform='translate(110 22) scale(0.58 1.04)'>
+<path d='M40 70 L160 70 L146 218 Q144 226 136 226 L64 226 Q56 226 54 218 Z' fill='url(#ib)' transform='translate(0 4)'/>
+<path d='M30 20 L170 20 L152 222 Q150 232 140 232 L60 232 Q50 232 48 222 Z' fill='#EAF7FF' fill-opacity='.18' stroke='#5A3B2E' stroke-width='8' stroke-linejoin='round'/>
+</g>
+<ellipse cx='200' cy='84' rx='36' ry='6' fill='#fff' opacity='.4'/>
+<g class='twinkle' fill='#FFD54F' stroke='#5A3B2E' stroke-width='3' stroke-linejoin='round'>
+<path d='M96 70 l7 16 l17 2 l-13 11 l4 17 l-15 -9 l-15 9 l4 -17 l-13 -11 l17 -2 z' transform='scale(.7) translate(40 20)'/>
+<path d='M300 60 l6 14 l15 2 l-11 10 l3 15 l-13 -8 l-13 8 l3 -15 l-11 -10 l15 -2 z'/>
+</g>
+</svg>

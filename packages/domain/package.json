@@ -1,0 +1,19 @@
+{
+  "name": "@lhdk/domain",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Lõi nghiệp vụ trường học online: danh tính, trường, vai theo phạm vi, lớp, phiên học, kết quả, chat an toàn, kiểm toán. Thuần TypeScript, không phụ thuộc transport/DB.",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "tsc --noEmit && vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3"
+  }
+}

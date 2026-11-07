@@ -1,0 +1,6 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 240'>
+<defs><linearGradient id='lb' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#6ED0F5'/><stop offset='1' stop-color='#2A93D8'/></linearGradient></defs>
+<path d='M40 70 L160 70 L146 218 Q144 226 136 226 L64 226 Q56 226 54 218 Z' fill='url(#lb)'/>
+<ellipse cx='100' cy='70' rx='60' ry='7' fill='#fff' opacity='.35'/>
+<path d='M58 96 L66 200' stroke='#fff' stroke-width='6' stroke-linecap='round' opacity='.3' fill='none'/>
+</svg>

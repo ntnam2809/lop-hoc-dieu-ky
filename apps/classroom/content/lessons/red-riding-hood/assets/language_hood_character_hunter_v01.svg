@@ -1,0 +1,25 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'>
+<defs>
+<linearGradient id='coat' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#6FBF73'/><stop offset='1' stop-color='#3F8F4A'/></linearGradient>
+<radialGradient id='skin' cx='42%' cy='35%' r='75%'><stop offset='0' stop-color='#FFE3C8'/><stop offset='1' stop-color='#F0B98F'/></radialGradient>
+</defs>
+<ellipse cx='150' cy='386' rx='96' ry='11' fill='#5A3B2E' opacity='.14'/>
+<g stroke='#5A3B2E' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'>
+<path d='M112 320 v50 M188 320 v50' stroke='#7A5230' stroke-width='34' fill='none'/>
+<ellipse cx='110' cy='374' rx='32' ry='15' fill='#4E3524'/><ellipse cx='190' cy='374' rx='32' ry='15' fill='#4E3524'/>
+<path d='M150 196 C 92 196 70 244 74 300 C 76 330 90 346 100 350 L 200 350 C 210 346 224 330 226 300 C 230 244 208 196 150 196 Z' fill='url(#coat)'/>
+<rect x='84' y='292' width='132' height='20' rx='6' fill='#8D5A3B'/><rect x='136' y='290' width='28' height='24' rx='5' fill='#FFC94A'/>
+<ellipse cx='72' cy='290' rx='18' ry='34' fill='url(#coat)' transform='rotate(14 72 290)'/><ellipse cx='228' cy='290' rx='18' ry='34' fill='url(#coat)' transform='rotate(-14 228 290)'/>
+<circle cx='66' cy='322' r='15' fill='url(#skin)'/><circle cx='234' cy='322' r='15' fill='url(#skin)'/>
+<ellipse cx='150' cy='144' rx='66' ry='60' fill='url(#skin)'/>
+<path d='M90 150 C 90 214 210 214 210 150 C 196 176 168 184 150 184 C 132 184 104 176 90 150 Z' fill='#C77B3C'/>
+<path d='M120 168 C 130 160 170 160 180 168 C 170 176 130 176 120 168 Z' fill='#C77B3C' stroke-width='4'/>
+<path d='M70 100 C 70 46 230 46 230 100 C 200 90 100 90 70 100 Z' fill='#8D5A3B'/>
+<path d='M40 106 C 80 90 220 90 260 106 C 258 120 42 120 40 106 Z' fill='#A06A44'/>
+<path d='M200 70 C 236 30 262 30 270 24 C 262 54 238 72 206 86 Z' fill='#E8573C'/>
+<circle cx='150' cy='148' r='9' fill='#E7A07C' stroke-width='4'/>
+</g>
+<ellipse cx='98' cy='164' rx='12' ry='8' fill='#FF8FA6' opacity='.5'/><ellipse cx='202' cy='164' rx='12' ry='8' fill='#FF8FA6' opacity='.5'/>
+<g class='blink'><ellipse cx='120' cy='134' rx='8' ry='12' fill='#3B2A22'/><circle cx='124' cy='128' r='3.36' fill='#fff'/><circle cx='116' cy='140' r='1.6' fill='#fff'/><ellipse cx='180' cy='134' rx='8' ry='12' fill='#3B2A22'/><circle cx='184' cy='128' r='3.36' fill='#fff'/><circle cx='176' cy='140' r='1.6' fill='#fff'/></g>
+<path d='M102 112 q16 -8 30 0 M168 112 q14 -8 30 0' fill='none' stroke='#7A4A22' stroke-width='6' stroke-linecap='round'/>
+</svg>

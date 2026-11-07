@@ -1,0 +1,11 @@
+rules_version = '2';
+
+// Asset (ảnh, âm thanh) công khai để đọc; chỉ pipeline xuất bản được ghi.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /content/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

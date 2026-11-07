@@ -1,0 +1,37 @@
+{
+  "name": "@lhdk/classroom",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Nền tảng trò chơi giáo dục cho trẻ mẫu giáo 5 tuổi — engine dữ liệu hoá, nội dung là gói JSON + asset, Firebase làm backend.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:lan": "vite --host",
+    "build": "npm run validate && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "validate": "tsx tools/validate.ts",
+    "scaffold": "tsx tools/scaffold.ts",
+    "publish:content": "tsx tools/publish.ts",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "qa": "npm run validate && npm run typecheck && npm test && npm run test:e2e",
+    "approve": "tsx tools/approve.ts",
+    "schema": "tsx tools/export-schema.ts"
+  },
+  "dependencies": {
+    "@fontsource/baloo-2": "^5.3.0",
+    "@fontsource/nunito": "^5.3.0",
+    "firebase": "^12.19.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^24.0.0",
+    "firebase-admin": "^14.5.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3",
+    "zod": "^4.6.5"
+  }
+}

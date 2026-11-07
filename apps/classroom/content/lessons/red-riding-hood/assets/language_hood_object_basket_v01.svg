@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 180'>
+<defs><linearGradient id='wick' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#E9B873'/><stop offset='1' stop-color='#C98C4B'/></linearGradient></defs>
+<ellipse cx='100' cy='170' rx='70' ry='7' fill='#5A3B2E' opacity='.14'/>
+<g stroke='#5A3B2E' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'>
+<path d='M52 100 C 52 24 148 24 148 100' fill='none' stroke-width='9'/>
+<path d='M70 76 C 60 56 72 40 88 44 C 96 30 120 30 126 46 C 142 44 150 66 136 78 Z' fill='#F6C27A'/>
+<path d='M40 88 C 70 78 130 78 160 88 L 144 160 C 130 170 70 170 56 160 Z' fill='url(#wick)'/>
+<path d='M36 92 C 70 80 130 80 164 92 C 164 102 36 102 36 92 Z' fill='#F0A33F'/>
+<path d='M44 82 C 64 72 140 72 156 82 L 160 92 L 40 92 Z' fill='#FF6F6F'/>
+</g>
+<g stroke='#5A3B2E' stroke-width='3' fill='none' opacity='.45'><path d='M54 118 H 148 M58 138 H 144 M80 100 V 164 M110 100 V 166 M138 100 V 164'/></g>
+<g fill='#fff' opacity='.85'><path d='M52 84 l 12 -6 l 12 6 z M96 80 l 12 -5 l 12 5 z'/></g>
+</svg>

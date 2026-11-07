@@ -1,0 +1,11 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 200'>
+<defs><linearGradient id='vin' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFE9B8'/><stop offset='1' stop-color='#F2C46A'/></linearGradient></defs>
+<ellipse cx='50' cy='192' rx='38' ry='6' fill='#5A3B2E' opacity='.14'/>
+<g stroke='#5A3B2E' stroke-width='6' stroke-linejoin='round' stroke-linecap='round'>
+<path d='M38 36 L 62 36 L 62 64 C 62 76 84 84 84 108 L 84 172 Q 84 184 72 184 L 28 184 Q 16 184 16 172 L 16 108 C 16 84 38 76 38 64 Z' fill='url(#vin)'/>
+<rect x='34' y='12' width='32' height='26' rx='8' fill='#E8573C'/>
+</g>
+<rect x='24' y='110' width='52' height='46' rx='8' fill='#fff' stroke='#5A3B2E' stroke-width='3'/>
+<text x='50' y='142' text-anchor='middle' font-family='Baloo 2, Nunito, sans-serif' font-weight='800' font-size='16' fill='#E8573C'>GIẤM</text>
+<path d='M24 104 L 24 170' stroke='#fff' stroke-width='5' stroke-linecap='round' opacity='.6'/>
+</svg>
