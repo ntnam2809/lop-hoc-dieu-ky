@@ -9,3 +9,4 @@ service-account*.json
 .firebaserc
 *.log
 .DS_Store
+dist-demo/
