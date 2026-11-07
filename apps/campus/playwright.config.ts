@@ -22,6 +22,7 @@ export default defineConfig({
     {
       command: 'npm --prefix ../.. run start -w @lhdk/server',
       port: 2567,
+      env: { AUTH_MODE: 'dev' },
       reuseExistingServer: true,
       timeout: 60_000,
     },

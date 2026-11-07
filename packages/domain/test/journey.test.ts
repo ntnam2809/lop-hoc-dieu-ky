@@ -1,18 +1,36 @@
 import { describe, expect, it } from 'vitest';
-import { SchoolService, type Grader } from '../src';
+import { SchoolService, answerKeysFromPackage, lessonLookupFrom } from '../src';
 
 /**
  * Hai hành trình nghiệm thu của vertical slice (docs/MVP.md §3), chạy trọn trên lõi domain:
  * A — phụ huynh chơi trước ở trường chơi (chỉ người lớn) để hiểu cơ chế.
  * B — trẻ tham gia qua tổ chức có thật đã xác minh, giáo viên thật quản lý.
  */
-const grader: Grader = (_lesson, activity, response) =>
-  activity === 'a9-quiz' ? (response === 'duck' ? 'correct' : 'incorrect') : 'recorded';
+const lessons = lessonLookupFrom([
+  answerKeysFromPackage({
+    lesson: { id: 'float-or-sink' },
+    scenarios: [
+      {
+        activities: [
+          { id: 'a3-predict-duck', type: 'prediction', options: [{ id: 'float' }, { id: 'sink' }] },
+          {
+            id: 'a9-quiz',
+            type: 'object_identification',
+            options: [{ id: 'duck' }, { id: 'rock' }],
+            correctAnswer: 'duck',
+          },
+        ],
+      },
+    ],
+  }),
+]);
 
 const setup = () => {
   let t = 1_000;
-  return new SchoolService({ clock: () => (t += 1000), grader });
+  return new SchoolService({ clock: () => (t += 1000), lessons });
 };
+
+const choice = (optionId: string) => ({ kind: 'choice' as const, optionId });
 
 describe('Hành trình A — phụ huynh chơi trước (trường chơi, chỉ người lớn)', () => {
   it('phụ huynh vào lớp bằng mã, học thử bài như con sẽ học, chat chữ được', () => {
@@ -34,7 +52,7 @@ describe('Hành trình A — phụ huynh chơi trước (trường chơi, chỉ 
     svc.joinSession(dad.id, s.id);
 
     svc.setActivity(host.id, s.id, 'a9-quiz');
-    expect(svc.submitResult(mom.id, s.id, 'a9-quiz', 'duck').outcome).toBe('correct');
+    expect(svc.submitResult(mom.id, s.id, 'a9-quiz', choice('duck')).outcome).toBe('correct');
     expect(svc.sendChat(dad.id, s.id, { kind: 'text', text: 'Bé nhà mình sẽ thích bài này' }).payload.kind).toBe('text');
 
     // Trường chơi không có hồ sơ trẻ.
@@ -72,14 +90,14 @@ describe('Hành trình B — trẻ qua tổ chức có thật: tạo trường �
 
     // 7–8. B mở hoạt động; C dự đoán rồi trả lời.
     svc.setActivity(b.id, session.id, 'a3-predict-duck');
-    expect(svc.submitResult(c.id, session.id, 'a3-predict-duck', 'float').outcome).toBe('recorded');
+    expect(svc.submitResult(c.id, session.id, 'a3-predict-duck', choice('float')).outcome).toBe('recorded');
     svc.setActivity(b.id, session.id, 'a9-quiz');
-    expect(svc.submitResult(c.id, session.id, 'a9-quiz', 'rock').outcome).toBe('incorrect');
-    expect(svc.submitResult(c.id, session.id, 'a9-quiz', 'duck')).toMatchObject({ outcome: 'correct', attempts: 2 });
+    expect(svc.submitResult(c.id, session.id, 'a9-quiz', choice('rock')).outcome).toBe('incorrect');
+    expect(svc.submitResult(c.id, session.id, 'a9-quiz', choice('duck'))).toMatchObject({ outcome: 'correct', attempts: 2 });
 
     // 9–10. Đóng phiên; xem theo quyền.
     svc.endSession(b.id, session.id);
-    expect(() => svc.submitResult(c.id, session.id, 'a9-quiz', 'duck')).toThrow(/đã đóng/);
+    expect(() => svc.submitResult(c.id, session.id, 'a9-quiz', choice('duck'))).toThrow(/đã đóng/);
     expect(svc.classProgress(b.id, klass.id)).toHaveLength(2);
     expect(svc.classProgress(a.id, klass.id)).toHaveLength(2);
     expect(svc.myProgress(c.id).map((r) => r.activityId).sort()).toEqual(['a3-predict-duck', 'a9-quiz']);

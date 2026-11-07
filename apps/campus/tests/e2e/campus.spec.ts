@@ -1,6 +1,7 @@
 /**
- * E2E campus: hai (hoặc một) trình duyệt thật nối server Colyseus thật.
- * Mỗi ca dùng context riêng; tên người chơi duy nhất mỗi ca để lọc khi room còn người từ ca trước.
+ * E2E campus: hai (hoặc một) trình duyệt thật nối server Colyseus thật (AUTH_MODE=dev, đã seed u01..u30).
+ * Mỗi ca dùng context riêng; hai tab trong một ca là hai người dùng khác nhau (?as=u01 / ?as=u02).
+ * Tên hiển thị do server lấy từ domain ("Dev u01"), client không tự đặt được.
  */
 import { test, expect, type Browser, type BrowserContext, type Page } from '@playwright/test';
 
@@ -8,20 +9,22 @@ interface P { id: string; displayName: string; x: number; y: number }
 interface S { status: string; connected: boolean; self: { id: string; x: number; y: number } | null; players: P[]; fps: number; rtt: number | null }
 
 const TOKEN_KEY = 'lhdk.campus.reconnectionToken';
-let seqName = 0;
-const uniq = (base: string) => `${base}${Date.now().toString(36).slice(-4)}${seqName++}`;
 
-interface Client { ctx: BrowserContext; page: Page; name: string; errors: string[] }
+/** name = displayName server gán cho nhãn dev (Dev u01...), dùng để lọc người chơi. */
+interface Client { ctx: BrowserContext; page: Page; name: string; label: string; errors: string[]; consoleErrors: string[] }
 
-async function open(browser: Browser, name: string, query = ''): Promise<Client> {
+async function open(browser: Browser, label: string, query = ''): Promise<Client> {
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  await page.goto(`/?name=${encodeURIComponent(name)}&server=ws://localhost:2567&harness=1${query}`);
+  const consoleErrors: string[] = [];
+  // Dòng "Failed to load resource" là log mạng tự động của Chromium cho mọi HTTP 4xx, không phải lỗi code.
+  page.on('console', (m) => { if (m.type() === 'error' && !m.text().startsWith('Failed to load resource')) consoleErrors.push(m.text()); });
+  await page.goto(`/?as=${encodeURIComponent(label)}&server=ws://localhost:2567&harness=1${query}`);
   await page.waitForFunction(() => !!(window as any).__campus);
   await page.evaluate(() => (window as any).__campus.mount());
-  return { ctx, page, name, errors };
+  return { ctx, page, name: `Dev ${label}`, label, errors, consoleErrors };
 }
 
 const st = (c: Client): Promise<S> => c.page.evaluate(() => (window as any).__campus.state());
@@ -32,9 +35,9 @@ async function ready(c: Client) {
 }
 
 /** Mở A và B, chờ cả hai thấy nhau. */
-async function pair(browser: Browser, an = 'A', bn = 'B') {
-  const a = await open(browser, uniq(an));
-  const b = await open(browser, uniq(bn));
+async function pair(browser: Browser) {
+  const a = await open(browser, 'u01');
+  const b = await open(browser, 'u02');
   await ready(a);
   await ready(b);
   for (const [x, y] of [[a, b], [b, a]] as const) {
@@ -211,15 +214,14 @@ test('4. từ chối teleport / quá tốc độ, rồi vẫn đi hợp lệ đ�
   await a.ctx.close(); await b.ctx.close();
 });
 
-test('5. tên dài bị cắt còn 20 ký tự', async ({ browser }) => {
+test('5. tên hiển thị do server cấp, ?name= của client bị bỏ qua', async ({ browser }) => {
   const long = ('N' + Date.now().toString(36)).padEnd(30, 'x');
-  expect(long.length).toBe(30);
-  const a = await open(browser, long);
-  const b = await open(browser, uniq('B'));
+  const a = await open(browser, 'u01', `&name=${encodeURIComponent(long)}`);
+  const b = await open(browser, 'u02');
   await ready(a); await ready(b);
   const aid = (await st(a)).self!.id;
-  await expect.poll(async () => (await st(b)).players.find((p) => p.id === aid)?.displayName.length ?? 0, { timeout: 10_000 }).toBe(20);
-  expect((await st(b)).players.find((p) => p.id === aid)!.displayName).toBe(long.slice(0, 20));
+  await expect.poll(async () => (await st(b)).players.find((p) => p.id === aid)?.displayName ?? '', { timeout: 10_000 }).toBe('Dev u01');
+  expect((await st(a)).players.some((p) => p.displayName.includes(long.slice(0, 5)))).toBe(false);
   await a.ctx.close(); await b.ctx.close();
 });
 
@@ -257,7 +259,7 @@ test('6. reconnect sau disconnectHard giữ id và vị trí, B không mất A',
 test('7. token bị từ chối: vào phiên mới, không lỗi', async ({ browser }) => {
   // Lệch spec: token trong sessionStorage chỉ được đọc khi (tải lại) trang; disconnectHard dùng
   // token nội bộ của SDK nên ghi đè storage không ảnh hưởng. Do đó ghi đè rồi tải lại trang.
-  const a = await open(browser, uniq('A'));
+  const a = await open(browser, 'u01');
   await ready(a);
   const oldId = (await st(a)).self!.id;
   await a.page.evaluate(([k]) => sessionStorage.setItem(k, 'rac-khong-hop-le'), [TOKEN_KEY]);
@@ -275,7 +277,7 @@ test('8. cold start: không server thì waking, không lỗi', async ({ browser 
   const page = await ctx.newPage();
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  await page.goto(`/?name=${uniq('W')}&server=ws://localhost:2999&harness=1`);
+  await page.goto('/?as=u01&server=ws://localhost:2999&harness=1');
   await page.waitForFunction(() => !!(window as any).__campus);
   await page.evaluate(() => (window as any).__campus.mount());
   await expect.poll(async () => (await page.evaluate(() => (window as any).__campus.state())).status, { timeout: 5_000 }).toBe('waking');
@@ -292,4 +294,38 @@ test('9. presence chỉ lộ các khoá cho phép', async ({ browser }) => {
   expect(s.players.length).toBeGreaterThanOrEqual(2);
   for (const p of s.players) expect(Object.keys(p).sort()).toEqual(['displayName', 'id', 'x', 'y']);
   await a.ctx.close(); await b.ctx.close();
+});
+
+test('10. người ngoài trường (?as=outsider) bị từ chối, không lỗi console', async ({ browser }) => {
+  const a = await open(browser, 'outsider');
+  await expect.poll(async () => (await st(a)).status, { timeout: 15_000 }).toBe('denied');
+  const s = await st(a);
+  expect(s.connected).toBe(false);
+  expect(s.self).toBeNull();
+  expect(a.errors).toEqual([]);
+  expect(a.consoleErrors).toEqual([]);
+  await a.ctx.close();
+});
+
+test('11. u30 (chỉ hiệu trưởng tổ chức, không ở trường chơi) bị từ chối', async ({ browser }) => {
+  const a = await open(browser, 'u30');
+  await expect.poll(async () => (await st(a)).status, { timeout: 15_000 }).toBe('denied');
+  expect((await st(a)).self).toBeNull();
+  expect(a.errors).toEqual([]);
+  await a.ctx.close();
+});
+
+test('12. cùng nhãn mở tab thứ hai: tab cũ thành replaced, tab mới thấy mình', async ({ browser }) => {
+  const first = await open(browser, 'u01');
+  await ready(first);
+  const second = await open(browser, 'u01');
+  await expect.poll(async () => (await st(first)).status, { timeout: 15_000 }).toBe('replaced');
+  await ready(second);
+  const s = await st(second);
+  expect(s.players.some((p) => p.id === s.self!.id && p.displayName === 'Dev u01')).toBe(true);
+  // tab cũ không tự giành lại chỗ
+  await first.page.waitForTimeout(1500);
+  expect((await st(first)).status).toBe('replaced');
+  expect(first.errors).toEqual([]);
+  await first.ctx.close(); await second.ctx.close();
 });

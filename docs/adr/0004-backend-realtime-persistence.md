@@ -8,7 +8,7 @@ Cần: kiểm quyền phía server, state phiên học tin cậy, vị trí avat
 ## Quyết định
 - **Lõi nghiệp vụ** `packages/domain` thuần, độc lập transport/DB (đã có). Server chỉ là adapter.
 - **Server** `apps/server` (M2): Node 22, một tiến trình, HTTP cho lệnh quản trị + WebSocket cho room.
-- **Realtime:** ứng viên số một **Colyseus** (room authoritative, state delta, reconnect, matchmaking). Dự phòng: `ws` + giao thức tự định nghĩa validate bằng zod. Room = campus instance (trần ~40) · room = phiên học.
+- **Realtime:** ứng viên số một **Colyseus** (room authoritative, state delta, reconnect, matchmaking). Dự phòng: `ws` + giao thức tự định nghĩa validate bằng zod. Room = campus instance (trần 20, ADR-0017) · room = phiên học.
 - **Authority:** server giữ vị trí hợp lệ (biên bản đồ, tốc độ tối đa), trạng thái phiên, kết quả. Client dự đoán di chuyển cục bộ cho mượt.
 - **Lưu trữ:** PostgreSQL cho danh tính/trường/vai/lớp/ghi danh/phiên/kết quả/báo cáo/kiểm toán. Test dùng store bộ nhớ (cùng giao diện `Store`). Asset/nội dung: tiếp tục static + (tùy chọn) Firebase Storage.
 

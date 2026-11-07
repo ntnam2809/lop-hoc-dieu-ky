@@ -55,7 +55,7 @@ Giáo viên ──đóng phiên──► Kết quả xem được theo quyền (
 
 ## 5. Thế giới 2D
 
-- **Topology** (ADR-0008, ADR-0014): mỗi trường một campus instance (~40 người); phòng học là room riêng của phiên học. Có **campus trải nghiệm chính thức** (một trường chơi do nền tảng vận hành, nhiều instance) để phụ huynh vào chơi ngay. Không có hub chung giữa trường chơi và tổ chức; trẻ không bao giờ vào campus trường chơi.
+- **Topology** (ADR-0008, ADR-0014): mỗi trường một campus instance (tối đa 20 người, ADR-0017); phòng học là room riêng của phiên học. Có **campus trải nghiệm chính thức** (một trường chơi do nền tảng vận hành, nhiều instance) để phụ huynh vào chơi ngay. Không có hub chung giữa trường chơi và tổ chức; trẻ không bao giờ vào campus trường chơi.
 - **Campus MVP:** Cổng trường (bảng thông báo, điểm xuất hiện) · Sân trường (đồ vật tương tác: xích đu, bóng, cây; emote) · Phòng học 1 & 2 (cửa chỉ mở cho lớp có phiên). *[MVP]*
 - **Mở rộng:** thư viện, phòng thí nghiệm, phòng mỹ thuật, căng-tin, hội trường, vườn, phòng CLB *[Phase 1–4]*; mỗi khu chỉ thêm khi có hoạt động thật cho nó.
 - **Điều khiển:** chạm-để-đi (trẻ) · joystick ảo · WASD/phím mũi tên. Chạm avatar → thẻ tên (chỉ tên hiển thị). Emote: vẫy tay, giơ tay, vỗ tay, nhảy, ngồi.
@@ -104,7 +104,7 @@ Theo prompt (R5, R6, R8): free = học sinh hoặc giáo viên lớp nhỏ, **kh
 ```
 apps/campus (Phaser, M1) ─┐                         ┌─ packages/domain (lõi nghiệp vụ thuần) ✓
 apps/classroom (engine     ├─ WebSocket/HTTP ─► apps/server (M2) ─┤
-  bài học, prototype) ✓   ─┘                         └─ Postgres (M2) · nội dung tĩnh/Firebase
+  bài học, prototype) ✓   ─┘                         └─ Firestore qua cổng DocDb (M2, ADR-0018) · nội dung tĩnh
 ```
 ✓ = đã có code. Module nghiệp vụ & lead phụ trách: `school` · `classroom` · `world` · `learning` · `safety` · `platform` (`knowledge/modules/`).
 
@@ -114,7 +114,7 @@ apps/classroom (engine     ├─ WebSocket/HTTP ─► apps/server (M2) ─┤
 |---|---|---|
 | **M0** ✓ | Review, thiết kế, ADR, constitution, agent, init monorepo, lõi domain (hai không gian), migrate source | — |
 | **M1** ✓ | Spike S1: campus Phaser + room realtime, 2+ client thấy nhau, reconnect, đo trên tablet và điện thoại · port engine delta, đưa 4 bài khôi phục về build | anh Nam duyệt PR M0 |
-| **M2** | `apps/server`: domain qua HTTP/WS, auth người lớn, Postgres adapter, grader từ gói bài | S1 đạt tiêu chí ADR-0003 |
+| **M2** | `apps/server`: domain qua HTTP/WS, auth người lớn, adapter Firestore + Firebase Auth (Postgres hoãn), grader từ gói bài, SessionPlan, gán instance | S1 đạt tiêu chí ADR-0003 |
 | **M3 = MVP-A** (hạ tầng miễn phí, phiên ≤ 20 người — ADR-0017) | Campus trường chơi (cổng · sân · 2 phòng) + nhân vật + chuỗi nhiệm vụ + phòng học đồng bộ + chat người lớn có moderation + streamer mode · **mở cho phụ huynh, livestream quảng bá** | tài khoản host free |
 | **M4 = MVP-B** | Trường tổ chức chế độ private + hiệu trưởng phê duyệt giáo viên + thiết kế phiên học (`SessionPlan`) + trình chiếu cho lớp kèm ghi quan sát + xuất tóm tắt SKKN · pilot với một giáo viên thật. **Không có tài khoản trẻ** | Q-13, Q-16 |
 | Phase sau | Hồ sơ trẻ trên thiết bị của tổ chức | Q-02 |

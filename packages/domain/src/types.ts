@@ -4,6 +4,8 @@
  * Không lưu email/điện thoại/vị trí của trẻ — chỉ tên hiển thị (CONSTITUTION §2).
  */
 
+import type { NormalizedResponse } from './grading';
+
 export type Id = string;
 export type Timestamp = number; // ms epoch, do Clock cấp
 
@@ -90,6 +92,9 @@ export interface LessonSession {
   participants: Id[];
   startedAt: Timestamp;
   endedAt?: Timestamp;
+  /** Kế hoạch đã dùng để mở phiên (chỉ id) và danh sách hoạt động chụp lúc mở; không mang ghi chú/gợi ý của giáo viên. */
+  planId?: Id;
+  planActivityIds?: string[];
 }
 
 export type Outcome = 'correct' | 'incorrect' | 'recorded';
@@ -100,7 +105,8 @@ export interface ActivityResult {
   lessonId: string;
   userId: Id;
   activityId: string;
-  response: unknown;
+  /** Đáp án đã chuẩn hoá (chỉ trường đã biết, không chữ tự do). */
+  response: NormalizedResponse;
   outcome: Outcome;
   attempts: number;
   at: Timestamp;
@@ -143,7 +149,9 @@ export type AuditAction =
   | 'session.end'
   | 'chat.mode'
   | 'chat.hide'
-  | 'report.create';
+  | 'report.create'
+  | 'sessionPlan.create'
+  | 'sessionPlan.update';
 
 export interface AuditEvent {
   at: Timestamp;

@@ -14,7 +14,7 @@
 | [0005](adr/0005-auth-child-guardian.md) | Người lớn có tài khoản · trẻ là hồ sơ được quản lý | Accepted MVP; phụ huynh chờ Q-02 | school · safety |
 | [0006](adr/0006-identity-role-model.md) | Danh tính ≠ thành viên ≠ ghi danh ≠ gói; vai có phạm vi | Accepted | school |
 | [0007](adr/0007-safety-defaults.md) | Mặc định an toàn MVP | Accepted | safety |
-| [0008](adr/0008-world-topology.md) | Mỗi trường một campus instance; phòng học là room riêng | Accepted | world · classroom |
+| [0008](adr/0008-world-topology.md) | Mỗi trường một hoặc nhiều campus instance (≤ 20 người), server gán + ticket ghế; phòng học là room riêng | Accepted (sửa 2026-11-07, M2) | world · classroom |
 | [0009](adr/0009-entitlements-no-payment.md) | Quyền lợi theo gói, không thanh toán | Accepted | school |
 | [0010](adr/0010-content-schema.md) | Gói bài hiện có là hợp đồng nội dung | Accepted | learning |
 | [0011](adr/0011-hosting-deploy.md) | Hosting & deploy | Superseded (server) by 0017 | platform |
@@ -24,6 +24,7 @@
 | [0015](adr/0015-livestream-streamer-mode.md) | Livestream TikTok bởi người lớn, streamer mode | Accepted hướng; API TikTok LATER | world · classroom · safety |
 | [0017](adr/0017-free-tier-hosting.md) | Hạ tầng có sẵn, miễn phí (Pages · Firebase · host Node free); phiên live ≤ 20 người | Accepted (anh Nam 2026-11-06) | platform · world · classroom |
 | [0016](adr/0016-mvp-b-teacher-private-mode.md) | MVP-B: giáo viên thiết kế phiên học cho trẻ ở chế độ private, hiệu trưởng thật phê duyệt; trẻ không có tài khoản | Accepted (phương châm 2026-11-06) | school · classroom · learning · safety |
+| [0018](adr/0018-server-store-docdb.md) | Server giữ `Store` đồng bộ trong bộ nhớ, lưu bền qua cổng `DocDb` (Firestore MVP, Postgres sau) | Accepted (M2, 2026-11-07) | platform |
 
 ## Giả định đang dùng (đổi được khi anh Nam trả lời)
 
@@ -58,3 +59,10 @@
 | Q-16 | Bản tóm tắt phiên cho SKKN cần những mục gì (mẫu của Sở/Phòng GD?), xuất dạng gì (PDF, Word, in) | Không (M4) | Em soạn mẫu đầu từ dữ liệu phiên, anh hoặc giáo viên thật góp ý |
 | Q-14 | Livestream: tài khoản TikTok chính thức, ai phát, kịch bản, có cần đưa bình luận TikTok vào game không | Không chặn code; chặn kế hoạch quảng bá | Phát bằng streamer mode ở campus trải nghiệm; tích hợp bình luận để sau |
 | Q-15 | Phụ huynh đã chơi ở trường chơi có được liên kết với hồ sơ con trong tổ chức (xem tiến độ) không | Không (Phase 2) | Có, nhưng chỉ khi tổ chức xác nhận liên kết; phụ huynh không vào lớp có trẻ |
+| Q-17 | Sĩ số lớp gói `pilot` là 20 học sinh nhưng trần phiên live là 20 người **kể cả giáo viên** (ADR-0017): lớp đầy 20 em + giáo viên = 21 nên em cuối bị từ chối khi vào phiên. Hạ sĩ số `pilot` xuống 19, hay tính trần 20 học sinh + người lớn riêng? *(đang chờ, không chặn M2)* | Không | Hạ `maxClassSize` pilot xuống 19 (đơn giản, giữ trần 20 của ADR-0017) |
+| Q-18 | Trần số campus instance mỗi trường / toàn server trên host free (domain có sẵn `maxInstances`, server đang để không giới hạn; số đo S1 ≈ 92 MB RSS với 19 bot). *(đang chờ, không chặn M2)* | Không (chặn staging M3) | Đặt trần sau khi biết hạn mức RAM của host anh chọn |
+| Q-19 | Project Firebase phía server: anh tạo và giữ project; vùng Firestore (em gợi ý `asia-southeast1`); service account chỉ để ở host, không vào repo; kiểm hạn mức gói miễn phí ở trang Firebase thật lúc tạo. Cũng còn lại của Q-04: chọn host Node free. *(đang chờ, không chặn M2)* | Chặn staging M3 | Anh tạo project + host free khi tới M3 |
+| Q-20 | Xác nhận "người lớn" khi đăng ký: tự khai ≥ 18 kèm điều khoản, hay chỉ theo lời mời? *(đang chờ, chính sách/pháp lý)* | Không (M2 đóng đăng ký bằng `SIGNUP_ALLOWLIST`) | Chỉ theo lời mời ở giai đoạn thử |
+| Q-22 | Trước khi bật đăng nhập (M3): app có cần domain riêng thay cho `<owner>.github.io` dùng chung origin không? Token Firebase (IndexedDB), sessionStorage và CORS allowlist gắn theo origin nên mọi repo Pages của cùng chủ đều chung origin. *(đang chờ — hosting/chi phí, lead-safety đề xuất)* | Chặn bật đăng nhập M3 | Domain riêng (hoặc host riêng cho app) trước khi có đăng nhập thật |
+| Q-23 | Ở tổ chức "không livestream" dựa vào giáo viên tự khai + điều khoản vì kỹ thuật không phát hiện được quay màn hình; chấp nhận tự khai, hay cần thêm (dấu "đang phát" bắt buộc, cam kết khi cấp vai giáo viên)? *(đang chờ — chính sách trẻ em, gắn Q-14; campus tổ chức đang đóng `CAMPUS_ORG_ENABLED=false`)* | Chặn bật campus tổ chức (cùng Q-02, Q-13) | Cam kết bằng văn bản khi cấp vai giáo viên + dấu "đang phát" |
+| Q-21 | Thời hạn lưu chat chữ của người lớn và báo cáo trên Firestore, và ai được xem trong console Firebase. *(đang chờ, gần Q-02/ADR-0013)* | Không | Lưu ngắn, chỉ chủ dự án xem |

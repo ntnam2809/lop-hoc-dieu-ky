@@ -11,7 +11,7 @@ export const INTERP_DELAY_MS = 100;
 export const DEFAULT_PORT = 2567;
 export const TOKEN_KEY = 'lhdk.campus.reconnectionToken';
 
-export type Status = 'connecting' | 'waking' | 'connected' | 'reconnecting' | 'failed';
+export type Status = 'connecting' | 'waking' | 'connected' | 'reconnecting' | 'failed' | 'denied' | 'replaced';
 
 export interface MoveMsg { x: number; y: number; seq: number }
 export interface CorrectMsg { x: number; y: number; seq: number }
@@ -32,4 +32,6 @@ export const STATUS_LABEL: Partial<Record<Status, string>> = {
   waking: 'Máy chủ đang khởi động, chờ chút nhé…',
   reconnecting: 'Đang kết nối lại…',
   failed: 'Không kết nối được máy chủ.',
+  denied: 'Bạn chưa có quyền vào trường này',
+  replaced: 'Bạn đã mở trường ở cửa sổ khác',
 };
